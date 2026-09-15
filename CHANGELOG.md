@@ -1,5 +1,17 @@
 # Changelog — SKB-Dev
 
+## [0.5.0] — 2026-09-16
+
+### Added
+- Context Engine (`skb context <project>`)
+- 3 output modes: human, `--ai`, `--json`
+- Loads from `.skb/`: project, state, history, modules, assets, config
+- Live git info (head, branch, clean)
+- Module type breakdown
+
+### Changed
+- version 0.4.0 → 0.5.0
+
 ## [0.4.0] — 2026-09-16
 
 ### Added

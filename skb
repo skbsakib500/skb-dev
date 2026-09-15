@@ -78,6 +78,7 @@ cmd_dashboard() {
   echo "    skb todo <name>       Open TODO items"
   echo "    skb issues <name>     Open known issues"
   echo "    skb cd <name>         Print cd command"
+  echo "    skb context <name>    Load project context"
   echo "${BOLD}${CYAN}─────────────────────────────────────────────────${RESET}"
 }
 
@@ -208,6 +209,140 @@ cmd_cd() {
   echo "cd $p"
 }
 
+cmd_context() {
+  local name="$1"
+  local mode="$2"
+
+  if [ -z "$name" ]; then
+    name="$(basename $(pwd))"
+  fi
+
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && p=$(find_projects | grep -i "/$name" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+
+  if [ ! -d "$p/.skb" ]; then
+    echo "${RED}no .skb/ in $p${RESET}"
+    return 1
+  fi
+
+  python3 - "$p" "$mode" <<'PYCTX'
+import json, os, sys, subprocess
+from collections import Counter
+
+proj_path = sys.argv[1]
+mode = sys.argv[2] if len(sys.argv) > 2 else ""
+
+def load(f):
+    p = os.path.join(proj_path, ".skb", f)
+    if not os.path.exists(p): return {}
+    try:
+        with open(p) as fh: return json.load(fh)
+    except Exception: return {}
+
+proj = load("project.json")
+state = load("state.json")
+history = load("history.json")
+mods = load("modules.json")
+assets = load("assets.json")
+
+def sh(cmd):
+    try:
+        return subprocess.check_output(cmd, shell=True, cwd=proj_path, stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return ""
+
+git_head = sh("git log --oneline -1")
+git_branch = sh("git branch --show-current")
+git_clean = "clean" if not sh("git status -s") else "dirty"
+
+mod_list = mods.get("modules", [])
+asset_list = assets.get("assets", [])
+mod_types = Counter(m.get("type", "?") for m in mod_list)
+recent = history.get("releases", [])[-3:][::-1]
+
+if mode == "--json":
+    out = {
+        "project": proj,
+        "state": state,
+        "history_recent": recent,
+        "modules_count": len(mod_list),
+        "assets_count": len(asset_list),
+        "module_types": dict(mod_types),
+        "git": {"head": git_head, "branch": git_branch, "clean": git_clean == "clean"}
+    }
+    print(json.dumps(out, indent=2))
+
+elif mode == "--ai":
+    print("=== SKB PROJECT CONTEXT ===")
+    print(f"You are working on {proj.get('name','?')} (v{proj.get('version','?')}).")
+    print()
+    print("ARCHITECTURE")
+    print(f"  Type: {proj.get('type','?')}")
+    print(f"  Stack: {', '.join(proj.get('stack', []))}")
+    print()
+    print("CURRENT STATE")
+    print(f"  Focus: {state.get('current_focus','?')}")
+    print(f"  Next: {state.get('next_focus','?')}")
+    print(f"  Progress: {state.get('progress', 0)}%")
+    print(f"  Git: {git_branch} · {git_clean} · {(git_head[:7] if git_head else '?')}")
+    print()
+    print(f"MODULES ({len(mod_list)})")
+    for t, n in sorted(mod_types.items(), key=lambda x: -x[1]):
+        print(f"  {t}: {n}")
+    print()
+    print("OPEN ISSUES")
+    issues = state.get("known_issues_open", [])
+    print(f"  {', '.join(issues) if issues else 'none'}")
+    print()
+    print("RECENT RELEASES")
+    for r in recent:
+        hl = r.get("highlights", [])
+        first = hl[0] if hl else ""
+        print(f"  {r.get('version','?')} ({r.get('date','?')}): {first}")
+    print()
+    print("=== END CONTEXT ===")
+
+else:
+    W = 50
+    print("\u2554" + "\u2550"*W + "\u2557")
+    print("\u2551  SKB PROJECT CONTEXT" + " "*(W-22) + "\u2551")
+    print("\u255a" + "\u2550"*W + "\u255d")
+    print()
+    print(f"  PROJECT     {proj.get('name','?')}")
+    print(f"  ID          {proj.get('id','?')}")
+    print(f"  VERSION     {proj.get('version','?')}")
+    print(f"  TYPE        {proj.get('type','?')}")
+    print(f"  STATUS      {proj.get('status','?')}")
+    print()
+    print(f"  GIT         {git_branch} · {git_clean}")
+    print(f"  HEAD        {git_head[:60] if git_head else '?'}")
+    print(f"  FOCUS       {state.get('current_focus','?')}")
+    print(f"  NEXT        {state.get('next_focus','?')}")
+    print(f"  PROGRESS    {state.get('progress', 0)}%")
+    print()
+    print(f"  MODULES     {len(mod_list)}")
+    for t, n in sorted(mod_types.items(), key=lambda x: -x[1]):
+        print(f"    {t:<10} {n}")
+    print(f"  ASSETS      {len(asset_list)}")
+    issues = state.get("known_issues_open", [])
+    print(f"  ISSUES      {len(issues)} open")
+    if issues:
+        print(f"              {' '.join(issues)}")
+    print()
+    print("  RECENT RELEASES:")
+    for r in recent:
+        hl = r.get("highlights", [])
+        first = (hl[0] if hl else "")[:55]
+        print(f"    {r.get('version','?'):<8} {r.get('date','?')}  {first}")
+    print()
+    stack = proj.get("stack", [])
+    print("  STACK:")
+    print(f"    {' · '.join(stack)}")
+PYCTX
+}
+
 # ─── Dispatch ───
 case "${1:-}" in
   "")         cmd_dashboard ;;
@@ -219,6 +354,7 @@ case "${1:-}" in
   todo|t)     cmd_todo "$2" ;;
   issues|i)   cmd_issues "$2" ;;
   cd)         cmd_cd "$2" ;;
+  context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)
     echo "SKB Dev — Command Center v$SKB_VERSION"
@@ -232,6 +368,9 @@ case "${1:-}" in
     echo "  skb todo <name>         open TODOs"
     echo "  skb issues <name>       open issues"
     echo "  skb cd <name>           print cd command"
+    echo "  skb context <name>      project context (human)"
+    echo "  skb context <name> --ai AI-ready context block"
+    echo "  skb context <name> --json raw JSON"
     ;;
   *)
     echo "${RED}Unknown command: $1${RESET}"

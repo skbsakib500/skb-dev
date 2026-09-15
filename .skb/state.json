@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Phase 2 \u2014 ecosystem registries (aggregation)",
-  "next_focus": "Phase 3 \u2014 Context Engine",
-  "progress": 40,
+  "current_focus": "Phase 3 \u2014 Context Engine shipped",
+  "next_focus": "Phase 4 \u2014 Command Center dashboard menu",
+  "progress": 60,
   "build": "ready",
   "tests": "none",
   "git": {

@@ -4,7 +4,7 @@
   "name": "SKB Dev CLI",
   "type": "cli-tool",
   "subtype": "bash",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "status": "active",
   "author": {
     "name": "SKB Dev",
