@@ -1339,7 +1339,6 @@ for ename, rows in data.get("entities", {}).items():
             break
 
         if exists:
-            # Compare: only update if fields differ
             current = dict(conn.execute(f"SELECT * FROM {table} WHERE id=?", (r["id"],)).fetchone())
             diffs = {k: v for k, v in r.items() if k != "id" and current.get(k) != v}
             if diffs:
@@ -1348,8 +1347,6 @@ for ename, rows in data.get("entities", {}).items():
                     vals = list(diffs.values()) + [r["id"]]
                     conn.execute(f"UPDATE {table} SET {sets} WHERE id=?", vals)
                 updated += 1
-            # else: identical row, no change needed
-        else:
             if mode == "confirm":
                 cols = ", ".join(r.keys())
                 qs = ", ".join("?" * len(r))
