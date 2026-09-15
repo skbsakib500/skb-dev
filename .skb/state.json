@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Life OS registered (Phase 1 of master plan)",
-  "next_focus": "Data bridge (canonical JSON)",
-  "progress": 98,
+  "current_focus": "v1.0.0 \u2014 Data Bridge shipped, ecosystem stable",
+  "next_focus": "Shared AI layer (Life-OS/ai/)",
+  "progress": 100,
   "build": "ready",
   "tests": "none",
   "git": {

@@ -1,5 +1,54 @@
 # Changelog — SKB-Dev
 
+## [1.0.0] — 2026-09-16 — "Foundation"
+
+**First stable release.** SKB Dev Ecosystem control plane complete.
+
+### Added
+- **Schema v1** — `.skb/` contract locked (6 files per project)
+- **Ecosystem registries** — aggregated views across all projects
+- **Context Engine** — `skb context <p>` (human/--ai/--json)
+- **Interactive dashboard** — 9-item menu
+- **Security** — `skb scan`, `skb audit`, `skb guard`
+- **Release Engine** — `skb release <p> <ver>` (guided, safe)
+- **AI Context Export** — `skb ai-context <p>` (markdown/json)
+- **Life OS registration** — `~/Life-OS/` workspace
+- **Feature matrix** — `skb lifos features` (38 features × brain/android/sync)
+- **Canonical schema** — `schema.json` (10 entities, v3)
+- **Data Bridge** — export/validate/diff/import (canonical JSON)
+
+### Migrated
+- SKB-Dev, Agent-Mimi, Mimi-Android, SKB-Player, SKB-Music — all to Schema v1
+
+### Design Principles
+- Model-agnostic — project memory lives with the code
+- No direct DB-to-DB sync — everything through canonical JSON
+- Never embed secrets — enforced by guard hook
+- Append-only history — never rewrite past entries
+- Explicit confirmation before destructive ops
+
+## [0.9.0] — 2026-09-16
+- Life OS registered + cross-project feature matrix
+
+## [0.8.0] — 2026-09-16
+- AI Context Export (markdown/json)
+
+## [0.7.0] — 2026-09-16
+- Security: scan + audit + guard
+
+## [0.6.0] — 2026-09-16
+- Interactive Command Center
+
+## [0.5.0] — 2026-09-16
+- Context Engine
+
+## [0.4.0] — 2026-09-16
+- Ecosystem registries
+
+## [0.3.0] — 2026-09-16
+- Schema v1 dogfood
+
+
 ## [0.9.0] — 2026-09-16
 
 ### Added

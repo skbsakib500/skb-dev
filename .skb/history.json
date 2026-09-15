@@ -12,16 +12,34 @@
         "Reads .skb/ metadata from all projects",
         "Zero dependencies (bash + coreutils + git)"
       ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-09-16",
+      "tag": "v1.0.0",
+      "commit": null,
+      "highlights": [
+        "Schema v1 locked + 5 projects migrated",
+        "Ecosystem registries (ecosystem/modules/assets)",
+        "Context Engine (human/--ai/--json)",
+        "Interactive Command Center (9-item menu)",
+        "Security: scan + audit + guard",
+        "Release Engine (guided workflow)",
+        "AI Context Export (markdown/json)",
+        "Life OS registered (~/Life-OS/)",
+        "Cross-project feature matrix (38 features)",
+        "Data Bridge (export \u2192 validate \u2192 diff \u2192 import)"
+      ]
     }
   ],
   "milestones": [
     {
       "name": "Schema v1 locked",
       "date": "2026-09-16",
-      "note": "Canonical .skb/ contract — 6 templates + docs, tagged v1-schema"
+      "note": "Canonical .skb/ contract \u2014 6 templates + docs, tagged v1-schema"
     },
     {
-      "name": "Dogfood — SKB-Dev obeys own contract",
+      "name": "Dogfood \u2014 SKB-Dev obeys own contract",
       "date": "2026-09-16",
       "note": "First project migrated to schema v1"
     }

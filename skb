@@ -1016,13 +1016,371 @@ print("\n".join(out))
 PYAIC
 }
 
+# ─── DATA BRIDGE (Phase 5) ───
+
+_BRIDGE_DIR="$HOME/Life-OS/bridge"
+_BRIDGE_OUT="$HOME/Life-OS/bridge/exports"
+
+_lifos_bridge() {
+  local action="$1"
+  shift || true
+
+  mkdir -p "$_BRIDGE_OUT"
+
+  case "$action" in
+    export)    _bridge_export "$@" ;;
+    validate)  _bridge_validate "$@" ;;
+    diff)      _bridge_diff "$@" ;;
+    import)    _bridge_import "$@" ;;
+    *)
+      echo "usage: skb lifos bridge <action>"
+      echo ""
+      echo "  export <source> [--out file]"
+      echo "  validate <file.json>"
+      echo "  diff <a.json> <b.json>"
+      echo "  import <target> <file.json> [--dry-run|--confirm]"
+      ;;
+  esac
+}
+
+# ─── Export: DB → canonical JSON ───
+_bridge_export() {
+  local source="$1"
+  local out=""
+
+  while [ -n "$2" ]; do
+    case "$2" in
+      --out) out="$3"; shift 2 ;;
+      *) break ;;
+    esac
+  done
+
+  [ -z "$source" ] && { echo "usage: skb lifos bridge export <source>"; return 1; }
+
+  # Locate DB based on source name
+  local db="" proj_root="" proj_id=""
+  case "$source" in
+    Agent-Mimi|agent-mimi|brain)
+      proj_root="$HOME/Agent-Mimi"
+      proj_id="skb-agent-mimi"
+      # Prefer profiles/default if exists, else root
+      if [ -f "$proj_root/data/mimi.db" ]; then
+        db="$proj_root/data/mimi.db"
+      fi
+      ;;
+    Mimi-Android|mimi-android|android)
+      proj_root="$HOME/Mimi-Android"
+      proj_id="skb-mimi-android"
+      if [ -f "$proj_root/app/src/main/assets/mimi.db" ]; then
+        db="$proj_root/app/src/main/assets/mimi.db"
+      fi
+      ;;
+    *)
+      echo "unknown source: $source"
+      echo "  try: Agent-Mimi | Mimi-Android"
+      return 1
+      ;;
+  esac
+
+  [ -f "$db" ] || { echo "🔴 DB not found: $db"; return 1; }
+
+  local date=$(date +%Y%m%d_%H%M%S)
+  [ -z "$out" ] && out="$_BRIDGE_OUT/${source}_${date}.json"
+
+  echo "═══ BRIDGE EXPORT ═══"
+  echo "  source: $source"
+  echo "  DB:     $db"
+  echo "  out:    $out"
+  echo ""
+
+  python3 - "$db" "$proj_id" "$out" <<'PYEXP'
+import json, sqlite3, sys, os
+from datetime import datetime
+
+db, proj_id, out = sys.argv[1], sys.argv[2], sys.argv[3]
+
+# Load canonical schema
+schema = json.load(open(os.path.expanduser("~/Life-OS/schema.json")))
+entities = schema["entities"]
+
+conn = sqlite3.connect(db)
+conn.row_factory = sqlite3.Row
+
+export = {
+    "format": "skb/lifos-canonical/v1",
+    "schema_version": schema["version"],
+    "exported_at": datetime.now().isoformat(),
+    "source": proj_id,
+    "entities": {}
+}
+
+count = 0
+for name, spec in entities.items():
+    table = spec["table"]
+    try:
+        rows = conn.execute(f"SELECT * FROM {table}").fetchall()
+    except sqlite3.OperationalError:
+        # table doesn't exist in this DB
+        continue
+    entity_rows = []
+    for r in rows:
+        d = dict(r)
+        # Keep only fields declared in schema
+        filtered = {k: d.get(k) for k in spec["fields"].keys() if k in d}
+        entity_rows.append(filtered)
+    export["entities"][name] = entity_rows
+    count += len(entity_rows)
+
+conn.close()
+
+with open(out, "w") as f:
+    json.dump(export, f, indent=2, default=str)
+
+print(f"  ✅ exported {count} rows across {len(export['entities'])} entities")
+for name, rows in export["entities"].items():
+    if rows:
+        print(f"     {name}: {len(rows)}")
+PYEXP
+}
+
+# ─── Validate: canonical JSON vs schema ───
+_bridge_validate() {
+  local file="$1"
+  [ -z "$file" ] && { echo "usage: skb lifos bridge validate <file>"; return 1; }
+  [ -f "$file" ] || { echo "🔴 not found: $file"; return 1; }
+
+  python3 - "$file" <<'PYVAL'
+import json, sys, os
+
+f = sys.argv[1]
+data = json.load(open(f))
+schema = json.load(open(os.path.expanduser("~/Life-OS/schema.json")))
+entities = schema["entities"]
+
+print("═══ BRIDGE VALIDATE ═══")
+print(f"  file: {f}")
+print()
+
+issues = 0
+
+# Format check
+if data.get("format") != "skb/lifos-canonical/v1":
+    print(f"  🔴 wrong format: {data.get('format')}")
+    issues += 1
+else:
+    print(f"  ✅ format: skb/lifos-canonical/v1")
+
+if data.get("schema_version") != schema["version"]:
+    print(f"  🔴 schema_version: {data.get('schema_version')} ≠ {schema['version']}")
+    issues += 1
+else:
+    print(f"  ✅ schema_version: {schema['version']}")
+
+print(f"  source: {data.get('source')}")
+print()
+
+# Entity check
+for ename, rows in data.get("entities", {}).items():
+    if ename not in entities:
+        print(f"  🔴 unknown entity: {ename}")
+        issues += 1
+        continue
+    spec = entities[ename]
+    required = [k for k,v in spec["fields"].items() if v.get("required")]
+    bad = 0
+    for i, r in enumerate(rows):
+        for k in required:
+            if k not in r or r[k] is None:
+                if bad < 3:
+                    print(f"  🔴 {ename}[{i}]: missing required '{k}'")
+                bad += 1
+    if bad == 0:
+        print(f"  ✅ {ename}: {len(rows)} rows valid")
+    else:
+        issues += 1
+        print(f"  🔴 {ename}: {bad} invalid rows")
+
+print()
+if issues == 0:
+    print("  ✅ VALID")
+else:
+    print(f"  🔴 {issues} issue(s)")
+    sys.exit(1)
+PYVAL
+}
+
+# ─── Diff: two canonical files ───
+_bridge_diff() {
+  local a="$1" b="$2"
+  [ -z "$a" ] || [ -z "$b" ] && { echo "usage: skb lifos bridge diff <a.json> <b.json>"; return 1; }
+  [ -f "$a" ] || { echo "🔴 not found: $a"; return 1; }
+  [ -f "$b" ] || { echo "🔴 not found: $b"; return 1; }
+
+  python3 - "$a" "$b" <<'PYDIFF'
+import json, sys
+
+a = json.load(open(sys.argv[1]))
+b = json.load(open(sys.argv[2]))
+
+print("═══ BRIDGE DIFF ═══")
+print(f"  A: {a.get('source')}  ({a.get('exported_at','?')[:19]})")
+print(f"  B: {b.get('source')}  ({b.get('exported_at','?')[:19]})")
+print()
+
+total_only_a = 0
+total_only_b = 0
+total_common = 0
+
+for ename in sorted(set(a["entities"].keys()) | set(b["entities"].keys())):
+    ra = {r.get("id"): r for r in a["entities"].get(ename, []) if "id" in r}
+    rb = {r.get("id"): r for r in b["entities"].get(ename, []) if "id" in r}
+    only_a = set(ra) - set(rb)
+    only_b = set(rb) - set(ra)
+    common = set(ra) & set(rb)
+    total_only_a += len(only_a)
+    total_only_b += len(only_b)
+    total_common += len(common)
+    if not (only_a or only_b):
+        continue
+    print(f"  {ename}:")
+    print(f"    only in A: {len(only_a)}")
+    print(f"    only in B: {len(only_b)}")
+    print(f"    in both:   {len(common)}")
+
+print()
+print(f"  Total: A-only={total_only_a}, B-only={total_only_b}, common={total_common}")
+PYDIFF
+}
+
+# ─── Import: canonical JSON → target DB ───
+_bridge_import() {
+  local target="$1"
+  local file="$2"
+  local mode="dry-run"
+
+  # Parse flags
+  shift 2 2>/dev/null
+  while [ -n "$1" ]; do
+    case "$1" in
+      --confirm)  mode="confirm" ;;
+      --dry-run)  mode="dry-run" ;;
+    esac
+    shift
+  done
+
+  [ -z "$target" ] || [ -z "$file" ] && { echo "usage: skb lifos bridge import <target> <file> [--dry-run|--confirm]"; return 1; }
+  [ -f "$file" ] || { echo "🔴 not found: $file"; return 1; }
+
+  # Locate target DB
+  local db=""
+  case "$target" in
+    Agent-Mimi|agent-mimi|brain)
+      db="$HOME/Agent-Mimi/data/mimi.db"
+      ;;
+    Mimi-Android|mimi-android|android)
+      db="$HOME/Mimi-Android/app/src/main/assets/mimi.db"
+      ;;
+    *)
+      echo "unknown target: $target"; return 1
+      ;;
+  esac
+
+  [ -f "$db" ] || { echo "🔴 DB not found: $db"; return 1; }
+
+  echo "═══ BRIDGE IMPORT ═══"
+  echo "  file:   $file"
+  echo "  target: $target"
+  echo "  DB:     $db"
+  echo "  mode:   $mode"
+  echo ""
+
+  if [ "$mode" = "confirm" ]; then
+    # Auto backup
+    local bak="${db}.bak.$(date +%Y%m%d_%H%M%S)"
+    cp "$db" "$bak"
+    echo "  💾 backup: $bak"
+  fi
+
+  python3 - "$db" "$file" "$mode" <<'PYIMP'
+import json, sqlite3, sys
+
+db, file, mode = sys.argv[1], sys.argv[2], sys.argv[3]
+data = json.load(open(file))
+
+conn = sqlite3.connect(db)
+conn.row_factory = sqlite3.Row
+
+inserted = 0
+updated = 0
+skipped = 0
+
+for ename, rows in data.get("entities", {}).items():
+    if not rows:
+        continue
+    # Get table name from row fields — need to know table
+    # We rely on the entity name mapping (Task→tasks, etc.)
+    # Simple heuristic: try common patterns
+    # Better: load schema.json
+    import os
+    schema = json.load(open(os.path.expanduser("~/Life-OS/schema.json")))
+    if ename not in schema["entities"]:
+        print(f"  ⚠️  unknown entity {ename}, skipping")
+        continue
+    table = schema["entities"][ename]["table"]
+
+    for r in rows:
+        if "id" not in r:
+            skipped += 1
+            continue
+        try:
+            exists = conn.execute(f"SELECT 1 FROM {table} WHERE id=?", (r["id"],)).fetchone()
+        except sqlite3.OperationalError:
+            print(f"  ⚠️  table {table} missing, skipping")
+            break
+
+        if exists:
+            # Compare: only update if fields differ
+            current = dict(conn.execute(f"SELECT * FROM {table} WHERE id=?", (r["id"],)).fetchone())
+            diffs = {k: v for k, v in r.items() if k != "id" and current.get(k) != v}
+            if diffs:
+                if mode == "confirm":
+                    sets = ", ".join(f"{k}=?" for k in diffs)
+                    vals = list(diffs.values()) + [r["id"]]
+                    conn.execute(f"UPDATE {table} SET {sets} WHERE id=?", vals)
+                updated += 1
+            # else: identical row, no change needed
+        else:
+            if mode == "confirm":
+                cols = ", ".join(r.keys())
+                qs = ", ".join("?" * len(r))
+                conn.execute(f"INSERT INTO {table} ({cols}) VALUES ({qs})", list(r.values()))
+            inserted += 1
+
+if mode == "confirm":
+    conn.commit()
+    print(f"  ✅ committed")
+else:
+    print(f"  ℹ️  dry-run (no changes)")
+
+conn.close()
+
+print()
+print(f"  Would insert: {inserted}")
+print(f"  Would update: {updated}")
+print(f"  Skipped:      {skipped}")
+print()
+if mode == "dry-run":
+    print("  To apply: rerun with --confirm")
+PYIMP
+}
+
 # ─── LIFOS MODULE (Life OS Control) ───
 
 _LIFOS_DIR="$HOME/Life-OS"
 
 cmd_lifos() {
   local action="$1"
-  shift
+  shift || true
 
   if [ ! -d "$_LIFOS_DIR" ]; then
     echo "${RED}Life-OS not registered at $_LIFOS_DIR${RESET}"
@@ -1035,6 +1393,7 @@ cmd_lifos() {
     context|c)    _lifos_context ;;
     version|v)    _lifos_version ;;
     doctor|d)     _lifos_doctor ;;
+    bridge|b)     _lifos_bridge "$@" ;;
     *)
       echo "usage: skb lifos [features|context|version|doctor]"
       ;;
@@ -1181,7 +1540,7 @@ case "${1:-}" in
   doctor)   _skb_doctor ;;
   release|r) cmd_release "$2" "$3" ;;
   ai-context|ai|aictx) cmd_ai_context "$2" "$3" ;;
-  lifos)     cmd_lifos "$2" ;;
+  lifos)     shift; cmd_lifos "$@" ;;
   context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)
