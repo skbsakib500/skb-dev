@@ -1,7 +1,7 @@
 {
   "schema": "skb/v1",
-  "current_focus": "v1.3.0 \u2014 Portfolio polish",
-  "next_focus": "Phase B \u2014 real feature work",
+  "current_focus": "v1.4.0 \u2014 SKB Navigation Contract shipped",
+  "next_focus": "Implement Mimi-Android nav adapter (core/nav.js)",
   "progress": 100,
   "build": "ready",
   "tests": "none",

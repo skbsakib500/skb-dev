@@ -68,6 +68,19 @@
         "README rewrite \u2014 flagship documentation",
         "GitHub issue templates"
       ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-09-16",
+      "tag": "v1.4.0",
+      "commit": null,
+      "highlights": [
+        "SKB Navigation Contract v1 (spec/nav/)",
+        "8 v1 features fully specified",
+        "State shape + 7 events + route registry",
+        "Back priority algorithm (6-step)",
+        "Persistence tiers + guards + dedupe"
+      ]
     }
   ],
   "milestones": [

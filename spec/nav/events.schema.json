@@ -1,0 +1,53 @@
+{
+  "schema": "skb/nav-event/v1",
+  "description": "Universal navigation events",
+  "types": [
+    "NAV_PUSH",
+    "NAV_POP",
+    "NAV_REPLACE",
+    "NAV_RESET",
+    "NAV_RESTORE",
+    "NAV_DEEP_LINK",
+    "NAV_RESUME"
+  ],
+  "payload": {
+    "type": "object",
+    "required": [
+      "event",
+      "route",
+      "ts"
+    ],
+    "properties": {
+      "event": {
+        "enum": [
+          "NAV_PUSH",
+          "NAV_POP",
+          "NAV_REPLACE",
+          "NAV_RESET",
+          "NAV_RESTORE",
+          "NAV_DEEP_LINK",
+          "NAV_RESUME"
+        ]
+      },
+      "route": {
+        "type": "string"
+      },
+      "params": {
+        "type": "object"
+      },
+      "prevRoute": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "prevParams": {
+        "type": "object"
+      },
+      "ts": {
+        "type": "string",
+        "format": "date-time"
+      }
+    }
+  }
+}

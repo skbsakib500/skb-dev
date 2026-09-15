@@ -1,0 +1,5 @@
+{
+  "schema": "skb/nav-routes/v1",
+  "description": "App-specific route registry. Copy to app, fill in.",
+  "routes": []
+}

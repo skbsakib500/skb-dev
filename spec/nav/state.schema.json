@@ -1,0 +1,63 @@
+{
+  "schema": "skb/nav-state/v1",
+  "description": "Canonical navigation state for a single route",
+  "type": "object",
+  "required": [
+    "route",
+    "ts"
+  ],
+  "properties": {
+    "route": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_.]*$"
+    },
+    "params": {
+      "type": "object"
+    },
+    "scroll": {
+      "type": "object",
+      "properties": {
+        "y": {
+          "type": "number"
+        },
+        "x": {
+          "type": "number"
+        },
+        "itemId": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "tabs": {
+      "type": "object"
+    },
+    "filters": {
+      "type": "object"
+    },
+    "search": {
+      "type": "object"
+    },
+    "sort": {
+      "type": "object"
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "dirty": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

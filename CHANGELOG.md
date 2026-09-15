@@ -1,5 +1,27 @@
 # Changelog — SKB-Dev
 
+## [1.4.0] — 2026-09-16
+
+### Added
+- **SKB Navigation Contract v1** at `spec/nav/`
+  - `CONTRACT.md` — the standard (8 v1 features)
+  - `state.schema.json` — canonical state shape
+  - `events.schema.json` — 7 universal events
+  - `routes.json` — per-app route registry template
+  - `README.md` — overview + adapter expectations
+
+### Scope locked (v1)
+State shape · Route registry · Back priority · Persistence ·
+Events · Deep links · Guards · Deduplication
+
+### Deferred to v2
+Cross-app links · AI intent · Predictive back · Search ·
+Adaptive navigation · Breadcrumbs
+
+### Changed
+- version 1.3.0 → 1.4.0
+
+
 ## [1.2.0] — 2026-09-16
 
 ### Added
