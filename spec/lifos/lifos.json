@@ -1,0 +1,17 @@
+{
+  "schema": "skb/v1",
+  "id": "mimi-life-os",
+  "name": "Mimi Life OS",
+  "type": "product-group",
+  "status": "active",
+  "brain": "Agent-Mimi",
+  "delivery": "Mimi-Android",
+  "vault": "Mimi-Forever",
+  "members": [
+    {"id": "skb-agent-mimi",   "role": "brain",     "path": "~/Agent-Mimi"},
+    {"id": "skb-mimi-android", "role": "delivery",  "path": "~/Mimi-Android"},
+    {"id": "mimi-forever",     "role": "vault",     "path": "~/Mimi-Forever"}
+  ],
+  "created": "2026-09-16",
+  "last_touched": "2026-09-16"
+}

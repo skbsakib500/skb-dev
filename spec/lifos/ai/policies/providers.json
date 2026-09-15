@@ -1,0 +1,51 @@
+{
+  "schema": "skb/lifos-ai-providers/v1",
+  "providers": [
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "tier": "free",
+      "recommended": true
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "tier": "free",
+      "fast": true
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter",
+      "tier": "freemium"
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "tier": "freemium"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "tier": "paid"
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "tier": "paid"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "tier": "freemium"
+    }
+  ],
+  "routing": {
+    "default": "gemini",
+    "fast": "groq",
+    "code": "deepseek",
+    "vision": "gemini"
+  },
+  "fallback": {
+    "offline": "rule-based planner (ai_plan.py / ai_plan.js)"
+  }
+}

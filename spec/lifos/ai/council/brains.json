@@ -1,0 +1,17 @@
+{
+  "schema": "skb/lifos-council/v1",
+  "chair": "nusrat",
+  "brains": [
+    {"id":"nusrat",   "name":"Nusrat",   "role":"Chair",                  "priority":1},
+    {"id":"strategy", "name":"Strategy", "role":"Long-horizon direction", "priority":2},
+    {"id":"finance",  "name":"Finance",  "role":"Money, budget, debts",   "priority":2},
+    {"id":"health",   "name":"Health",   "role":"Sleep, energy, habits",  "priority":2},
+    {"id":"study",    "name":"Study",    "role":"Learning, exams",        "priority":3},
+    {"id":"devops",   "name":"DevOps",   "role":"Systems, automation",    "priority":3},
+    {"id":"admin",    "name":"Admin",    "role":"Scheduling, logistics",  "priority":3},
+    {"id":"civil",    "name":"Civil",    "role":"Engineering calcs",      "priority":4},
+    {"id":"research", "name":"Research", "role":"Deep dives, sources",    "priority":4},
+    {"id":"relations","name":"Relations","role":"People, social",         "priority":4},
+    {"id":"legal",    "name":"Legal",    "role":"Rules, compliance",      "priority":5}
+  ]
+}

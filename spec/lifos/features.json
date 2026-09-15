@@ -1,0 +1,65 @@
+{
+  "schema": "skb/lifos-features/v1",
+  "as_of": "2026-09-16",
+  "legend": {
+    "implemented": "🟢",
+    "partial":     "🟡",
+    "planned":     "🟠",
+    "missing":     "🔴",
+    "aligned":     "✅"
+  },
+  "features": {
+    "core_life": {
+      "tasks":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "goals":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "missions":      {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "finance":       {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "debts":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "study":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "journal":       {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "daily":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "time":          {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "sleep":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "routines":      {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "productivity":  {"brain": "implemented", "android": "implemented", "sync": "pending"}
+    },
+    "growth": {
+      "learning":      {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "health":        {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "mistakes":      {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "achievements":  {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "career":        {"brain": "implemented", "android": "implemented", "sync": "pending"}
+    },
+    "social": {
+      "relationships": {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "digital":       {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "faith":         {"brain": "implemented", "android": "implemented", "sync": "pending"}
+    },
+    "intelligence": {
+      "personas":         {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "automation":       {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "recommendations":  {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "predict":          {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "analytics":        {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "insights":         {"brain": "implemented", "android": "implemented", "sync": "pending"}
+    },
+    "trust": {
+      "trust":    {"brain": "implemented", "android": "implemented", "sync": "aligned"},
+      "council":  {"brain": "implemented", "android": "partial",     "sync": "missing"}
+    },
+    "ai": {
+      "ai_plan":   {"brain": "implemented", "android": "implemented", "sync": "partial"},
+      "ai_chat":   {"brain": "implemented", "android": "missing",     "sync": "missing"},
+      "multi_ai":  {"brain": "implemented", "android": "missing",     "sync": "missing"},
+      "ai_review": {"brain": "implemented", "android": "missing",     "sync": "missing"}
+    },
+    "runtime": {
+      "daemon":       {"brain": "implemented", "android": "missing", "sync": "missing"},
+      "telegram":     {"brain": "implemented", "android": "missing", "sync": "missing"},
+      "native_ui":    {"brain": "missing",     "android": "implemented", "sync": "n/a"},
+      "calculator":   {"brain": "implemented", "android": "implemented", "sync": "aligned"},
+      "pomodoro":     {"brain": "implemented", "android": "implemented", "sync": "pending"},
+      "civil":        {"brain": "implemented", "android": "implemented", "sync": "pending"}
+    }
+  }
+}

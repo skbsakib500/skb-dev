@@ -1,0 +1,22 @@
+{
+  "schema": "skb/lifos-ai-io/v1",
+  "description": "Standard input/output contract for Life OS AI calls",
+  "input": {
+    "prompt_id": "string (file stem from prompts/)",
+    "inputs": "object (matching prompt declared inputs)",
+    "provider": "string (id or 'auto')",
+    "save": "bool",
+    "context": "object (optional)"
+  },
+  "output": {
+    "ok": "bool",
+    "prompt_id": "string",
+    "provider": "string",
+    "model": "string",
+    "text": "string",
+    "tokens": "object {prompt, completion, total}",
+    "duration_ms": "int",
+    "saved_to": "string?",
+    "error": "string?"
+  }
+}

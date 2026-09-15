@@ -1,0 +1,123 @@
+{
+  "schema": "skb/lifos-schema/v1",
+  "version": 3,
+  "locked": "2026-09-16",
+  "entities": {
+    "Task": {
+      "table": "tasks",
+      "version": 3,
+      "fields": {
+        "id":           {"type": "int",  "required": true,  "pk": true},
+        "title":        {"type": "str",  "required": true},
+        "description":  {"type": "str",  "required": false},
+        "status":       {"type": "enum", "required": true,  "values": ["pending","in_progress","done","cancelled"]},
+        "priority":     {"type": "enum", "required": true,  "values": ["critical","high","medium","low"]},
+        "due_date":     {"type": "date", "required": false},
+        "completed_at": {"type": "datetime","required":false},
+        "created_at":   {"type": "datetime","required":true}
+      }
+    },
+    "Goal": {
+      "table": "goals",
+      "version": 3,
+      "fields": {
+        "id":          {"type": "int","required":true,"pk":true},
+        "title":       {"type": "str","required":true},
+        "description": {"type": "str","required":false},
+        "deadline":    {"type": "date","required":false},
+        "priority":    {"type": "enum","required":true,"values":["critical","high","medium","low"]},
+        "progress":    {"type": "int","required":true},
+        "status":      {"type": "enum","required":true,"values":["active","done","paused","archived"]}
+      }
+    },
+    "Mission": {
+      "table": "missions",
+      "version": 3,
+      "fields": {
+        "id":       {"type":"int","required":true,"pk":true},
+        "title":    {"type":"str","required":true},
+        "progress": {"type":"int","required":true},
+        "status":   {"type":"enum","required":true,"values":["active","done","paused"]}
+      }
+    },
+    "StudySession": {
+      "table": "study_sessions",
+      "version": 3,
+      "fields": {
+        "id":                {"type":"int","required":true,"pk":true},
+        "subject":           {"type":"str","required":true},
+        "study_date":        {"type":"date","required":true},
+        "duration_minutes":  {"type":"int","required":true},
+        "questions_solved":  {"type":"int","required":false},
+        "correct_answers":   {"type":"int","required":false}
+      }
+    },
+    "FinanceTransaction": {
+      "table": "finance",
+      "version": 3,
+      "fields": {
+        "id":               {"type":"int","required":true,"pk":true},
+        "transaction_date": {"type":"date","required":true},
+        "transaction_type": {"type":"enum","required":true,"values":["income","expense","borrowed","lent"]},
+        "amount":           {"type":"float","required":true},
+        "category":         {"type":"str","required":false},
+        "description":      {"type":"str","required":false},
+        "payment_method":   {"type":"str","required":false},
+        "account":          {"type":"str","required":false},
+        "notes":            {"type":"str","required":false},
+        "tags":             {"type":"str","required":false},
+        "created_at":       {"type":"datetime","required":true}
+      }
+    },
+    "Debt": {
+      "table": "debts",
+      "version": 3,
+      "fields": {
+        "id":              {"type":"int","required":true,"pk":true},
+        "person":          {"type":"str","required":true},
+        "debt_type":       {"type":"enum","required":true,"values":["owed_to_me","i_owe"]},
+        "original_amount": {"type":"float","required":true},
+        "paid_amount":     {"type":"float","required":true},
+        "status":          {"type":"enum","required":true,"values":["active","settled"]},
+        "due_date":        {"type":"date","required":false},
+        "notes":           {"type":"str","required":false}
+      }
+    },
+    "Journal": {
+      "table": "journal",
+      "version": 3,
+      "fields": {
+        "id":         {"type":"int","required":true,"pk":true},
+        "entry_date": {"type":"date","required":true},
+        "title":      {"type":"str","required":false},
+        "content":    {"type":"str","required":true},
+        "mood":       {"type":"str","required":false}
+      }
+    },
+    "DailyLog": {
+      "table": "daily_logs",
+      "version": 3,
+      "fields": {
+        "id":       {"type":"int","required":true,"pk":true},
+        "log_date": {"type":"date","required":true},
+        "energy":   {"type":"int","required":false}
+      }
+    },
+    "Sleep": {
+      "table": "sleep",
+      "version": 3,
+      "fields": {
+        "id":               {"type":"int","required":true,"pk":true},
+        "sleep_date":       {"type":"date","required":true},
+        "duration_minutes": {"type":"int","required":true}
+      }
+    },
+    "Achievement": {
+      "table": "user_badges",
+      "version": 3,
+      "fields": {
+        "code": {"type":"str","required":true,"pk":true}
+      }
+    }
+  }
+}
