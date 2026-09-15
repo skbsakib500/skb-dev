@@ -1,5 +1,16 @@
 # Changelog — SKB-Dev
 
+## [0.8.0] — 2026-09-16
+
+### Added
+- `skb ai-context <project>` — full AI-ready export
+- `--format=markdown` (default) or `--format=json`
+- Includes: identity, stack, state, git, full modules, assets, issues, releases, recent commits, rules
+- Model-agnostic: works with ChatGPT, Claude, Gemini, DeepSeek
+
+### Changed
+- version 0.7.0 → 0.8.0
+
 ## [0.7.0] — 2026-09-16
 
 ### Added

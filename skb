@@ -783,6 +783,239 @@ PYS
   esac
 }
 
+# ─── AI CONTEXT EXPORT (Phase 7) ───
+
+cmd_ai_context() {
+  local name="$1"
+  local flag="$2"
+  local format="text"
+  local save=""
+
+  # Parse flags
+  while [ -n "$flag" ]; do
+    case "$flag" in
+      --format=*) format="${flag#--format=}" ;;
+      --format)   shift; format="$2"; flag="$3"; continue ;;
+      --save)     save="yes" ;;
+      *) ;;
+    esac
+    flag=""
+  done
+
+  if [ -z "$name" ]; then
+    name="$(basename $(pwd))"
+  fi
+
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && p=$(find_projects | grep -i "/$name" | head -1)
+  [ -z "$p" ] && { echo "project not found: $name" >&2; return 1; }
+
+  python3 - "$p" "$format" <<'PYAIC'
+import json, os, sys, subprocess
+from collections import Counter
+
+proj_path = sys.argv[1]
+fmt = sys.argv[2] if len(sys.argv) > 2 else "text"
+
+def load(f):
+    path = os.path.join(proj_path, ".skb", f)
+    if not os.path.exists(path): return {}
+    try:
+        with open(path) as fh: return json.load(fh)
+    except Exception: return {}
+
+def sh(cmd):
+    try:
+        return subprocess.check_output(cmd, shell=True, cwd=proj_path,
+                                       stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return ""
+
+proj    = load("project.json")
+state   = load("state.json")
+history = load("history.json")
+mods    = load("modules.json")
+assets  = load("assets.json")
+config  = load("config.json")
+
+# Git
+git_branch = sh("git branch --show-current") or "?"
+git_head   = sh("git log --oneline -1")
+git_clean  = "clean" if not sh("git status -s") else "dirty"
+git_ahead  = sh("git rev-list --count origin/main..HEAD 2>/dev/null") or "0"
+recent_commits = sh("git log --oneline -10").split("\n") if sh("git log --oneline -10") else []
+
+mod_list = mods.get("modules", [])
+asset_list = assets.get("assets", [])
+releases = history.get("releases", [])
+issues = state.get("known_issues_open", [])
+security = config.get("security", {})
+release_cfg = config.get("release", {})
+
+# Build summary dict
+summary = {
+    "schema": "skb/v1",
+    "project": {
+        "id": proj.get("id"),
+        "name": proj.get("name"),
+        "type": proj.get("type"),
+        "subtype": proj.get("subtype"),
+        "version": proj.get("version"),
+        "status": proj.get("status"),
+        "purpose": proj.get("purpose"),
+        "stack": proj.get("stack", []),
+    },
+    "state": {
+        "focus": state.get("current_focus"),
+        "next": state.get("next_focus"),
+        "progress": state.get("progress"),
+        "build": state.get("build"),
+        "tests": state.get("tests"),
+    },
+    "git": {
+        "branch": git_branch,
+        "head": git_head,
+        "clean": git_clean == "clean",
+        "ahead_of_remote": int(git_ahead) if git_ahead.isdigit() else 0,
+        "last_tag": state.get("git", {}).get("last_tag"),
+    },
+    "modules": {
+        "count": len(mod_list),
+        "by_type": dict(Counter(m.get("type","?") for m in mod_list)),
+        "list": [{"name": m.get("name"), "path": m.get("path"),
+                  "type": m.get("type"), "role": m.get("role"),
+                  "status": m.get("status")}
+                 for m in mod_list],
+    },
+    "assets": {
+        "count": len(asset_list),
+        "by_type": dict(Counter(a.get("type","?") for a in asset_list)),
+    },
+    "history": {
+        "releases": releases,
+        "milestones": history.get("milestones", []),
+        "events": history.get("events", []),
+    },
+    "issues_open": issues,
+    "security_rules": security,
+    "release_config": release_cfg,
+    "recent_commits": recent_commits,
+}
+
+if fmt == "json":
+    print(json.dumps(summary, indent=2))
+    sys.exit(0)
+
+# Markdown output
+m = summary
+out = []
+out.append(f"# AI Context — {m['project']['name']} v{m['project']['version']}")
+out.append("")
+out.append("> This file is generated from the project's `.skb/` memory.")
+out.append("> Model-agnostic: works with ChatGPT, Claude, Gemini, DeepSeek.")
+out.append("> Do not edit by hand — regenerate with `skb ai-context <project>`.")
+out.append("")
+out.append("---")
+out.append("")
+
+out.append("## 1. Identity")
+out.append("")
+out.append(f"- **Project**: {m['project']['name']} (`{m['project']['id']}`)")
+out.append(f"- **Type**: {m['project']['type']}" +
+           (f" / {m['project']['subtype']}" if m['project'].get('subtype') else ""))
+out.append(f"- **Version**: {m['project']['version']}")
+out.append(f"- **Status**: {m['project']['status']}")
+if m['project'].get('purpose'):
+    out.append(f"- **Purpose**: {m['project']['purpose']}")
+out.append("")
+
+out.append("## 2. Stack")
+out.append("")
+for s in m['project'].get('stack', []):
+    out.append(f"- {s}")
+out.append("")
+
+out.append("## 3. Current State")
+out.append("")
+out.append(f"- **Focus**: {m['state']['focus']}")
+out.append(f"- **Next**: {m['state']['next']}")
+out.append(f"- **Progress**: {m['state']['progress']}%")
+out.append(f"- **Build**: {m['state']['build']} | **Tests**: {m['state']['tests']}")
+out.append("")
+
+out.append("## 4. Git State")
+out.append("")
+out.append(f"- **Branch**: {m['git']['branch']}")
+out.append(f"- **HEAD**: {m['git']['head']}")
+out.append(f"- **Clean**: {'yes' if m['git']['clean'] else 'no'}")
+out.append(f"- **Ahead of remote**: {m['git']['ahead_of_remote']}")
+if m['git'].get('last_tag'):
+    out.append(f"- **Last tag**: {m['git']['last_tag']}")
+out.append("")
+
+out.append(f"## 5. Modules ({m['modules']['count']})")
+out.append("")
+out.append("By type: " + ", ".join(f"{k}={v}" for k,v in sorted(m['modules']['by_type'].items(), key=lambda x:-x[1])))
+out.append("")
+for mod in m['modules']['list']:
+    out.append(f"- **{mod['name']}** ({mod['type']}) — {mod.get('role','')}")
+    out.append(f"  - path: `{mod['path']}`")
+out.append("")
+
+out.append(f"## 6. Assets ({m['assets']['count']})")
+out.append("")
+out.append("By type: " + ", ".join(f"{k}={v}" for k,v in sorted(m['assets']['by_type'].items(), key=lambda x:-x[1])))
+out.append("")
+
+out.append("## 7. Open Issues")
+out.append("")
+if m['issues_open']:
+    for i in m['issues_open']:
+        out.append(f"- {i}")
+else:
+    out.append("_None._")
+out.append("")
+
+out.append("## 8. Recent Releases")
+out.append("")
+for r in list(reversed(m['history']['releases']))[:5]:
+    hl = r.get('highlights', [])
+    out.append(f"- **{r.get('version')}** ({r.get('date')}) — {hl[0] if hl else ''}")
+out.append("")
+
+out.append("## 9. Recent Commits")
+out.append("")
+for c in m['recent_commits'][:10]:
+    out.append(f"- `{c}`")
+out.append("")
+
+out.append("## 10. Rules for the AI")
+out.append("")
+out.append("**Security (enforced):**")
+for k, v in m['security_rules'].items():
+    out.append(f"- {k}: {v}")
+out.append("")
+out.append("**Preserve:**")
+out.append("- `.skb/` schema v1 files (6 files, do not delete)")
+out.append("- Append-only `history.json` (never rewrite past entries)")
+out.append("- Tag prefix: `" + release_cfg.get("tag_prefix","v") + "`")
+out.append("")
+out.append("**Never:**")
+out.append("- Embed secrets in remote URLs")
+out.append("- Commit `.env`")
+out.append("- Force push to main")
+out.append("- Modify `.skb/` outside of `skb` commands")
+out.append("")
+
+out.append("---")
+out.append("")
+out.append(f"_Generated by SKB-Dev · {m['project']['id']}_")
+
+print("\n".join(out))
+PYAIC
+}
+
 # ─── Dispatch ───
 case "${1:-}" in
   "")         cmd_dashboard ;;
@@ -800,6 +1033,7 @@ case "${1:-}" in
   guard)      cmd_guard "$2" "$3" ;;
   doctor)   _skb_doctor ;;
   release|r) cmd_release "$2" "$3" ;;
+  ai-context|ai|aictx) cmd_ai_context "$2" "$3" ;;
   context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)

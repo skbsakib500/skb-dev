@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Phase 5 \u2014 security scan + audit + guard shipped",
-  "next_focus": "Phase 6 \u2014 Release Engine",
-  "progress": 85,
+  "current_focus": "Phase 7 \u2014 AI Context Export shipped",
+  "next_focus": "Phase 8 \u2014 polish + portfolio",
+  "progress": 95,
   "build": "ready",
   "tests": "none",
   "git": {
