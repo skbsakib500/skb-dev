@@ -49,6 +49,51 @@ status_of() {
 
 # ─── Commands ───
 cmd_dashboard() {
+  # Non-interactive: skb dashboard
+  if [ "$1" = "--plain" ]; then
+    _dashboard_render
+    return
+  fi
+
+  while true; do
+    clear
+    _dashboard_render
+    echo ""
+    printf "${BOLD}${CYAN}  > ${RESET}"
+    read -r choice
+
+    case "$choice" in
+      1|projects)  clear; cmd_projects; echo; read -p "  [enter] " ;;
+      2|status)    clear; cmd_status; echo; read -p "  [enter] " ;;
+      3|all)       clear; cmd_all; echo; read -p "  [enter] " ;;
+      4|context)
+        echo ""
+        read -p "  project name: " pn
+        clear; cmd_context "$pn"; echo; read -p "  [enter] " ;;
+      5|todo)
+        echo ""
+        read -p "  project name: " pn
+        clear; cmd_todo "$pn"; echo; read -p "  [enter] " ;;
+      6|issues)
+        echo ""
+        read -p "  project name: " pn
+        clear; cmd_issues "$pn"; echo; read -p "  [enter] " ;;
+      7|log)
+        echo ""
+        read -p "  project name: " pn
+        clear; cmd_log "$pn"; echo; read -p "  [enter] " ;;
+      8|ai)
+        echo ""
+        read -p "  project name: " pn
+        clear; cmd_context "$pn" --ai; echo; read -p "  [enter] " ;;
+      9|doctor)    clear; _skb_doctor; echo; read -p "  [enter] " ;;
+      0|q|exit)    clear; return ;;
+      *) ;;
+    esac
+  done
+}
+
+_dashboard_render() {
   local count=$(find_projects | wc -l)
   local clean=0 dirty=0
 
@@ -60,26 +105,73 @@ cmd_dashboard() {
     esac
   done < <(find_projects)
 
-  clear
   echo "${BOLD}${CYAN}─────────────────────────────────────────────────${RESET}"
   echo "${BOLD}${CYAN}  SKB DEV ECOSYSTEM  v$SKB_VERSION${RESET}"
   echo "${BOLD}${CYAN}  Professional Command Hub${RESET}"
   echo "${BOLD}${CYAN}─────────────────────────────────────────────────${RESET}"
-  echo "  Projects registered : ${GREEN}$count${RESET}"
-  echo "  Clean               : ${GREEN}$clean${RESET}"
-  echo "  With changes        : ${YELLOW}$dirty${RESET}"
+  printf "  Projects registered : ${GREEN}%s${RESET}
+" "$count"
+  printf "  Clean               : ${GREEN}%s${RESET}
+" "$clean"
+  printf "  With changes        : ${YELLOW}%s${RESET}
+" "$dirty"
   echo "${BOLD}${CYAN}─────────────────────────────────────────────────${RESET}"
-  echo "  ${BOLD}Commands${RESET}"
-  echo "    skb projects          List all projects"
-  echo "    skb status            Current dir details"
-  echo "    skb open <name>       Project summary"
-  echo "    skb all               All project statuses"
-  echo "    skb log <name>        Recent commits"
-  echo "    skb todo <name>       Open TODO items"
-  echo "    skb issues <name>     Open known issues"
-  echo "    skb cd <name>         Print cd command"
-  echo "    skb context <name>    Load project context"
+  echo "  ${BOLD}1${RESET}. Projects           ${DIM}table of all${RESET}"
+  echo "  ${BOLD}2${RESET}. Status             ${DIM}current dir${RESET}"
+  echo "  ${BOLD}3${RESET}. All                ${DIM}detailed${RESET}"
+  echo "  ${BOLD}4${RESET}. Context            ${DIM}project snapshot${RESET}"
+  echo "  ${BOLD}5${RESET}. TODO               ${DIM}open items${RESET}"
+  echo "  ${BOLD}6${RESET}. Issues             ${DIM}known bugs${RESET}"
+  echo "  ${BOLD}7${RESET}. Log                ${DIM}recent commits${RESET}"
+  echo "  ${BOLD}8${RESET}. AI Context         ${DIM}--ai format${RESET}"
+  echo "  ${BOLD}9${RESET}. Doctor             ${DIM}health scan${RESET}"
+  echo "  ${BOLD}0${RESET}. Exit"
   echo "${BOLD}${CYAN}─────────────────────────────────────────────────${RESET}"
+}
+
+_skb_doctor() {
+  echo "${BOLD}${CYAN}─── SKB Doctor — ecosystem health ───${RESET}"
+  echo ""
+  find_projects | while read p; do
+    [ -z "$p" ] && continue
+    local name=$(basename "$p")
+    local ok=0
+    local issues=""
+
+    # Check .skb/ files
+    for f in project state history config modules assets; do
+      if [ -f "$p/.skb/$f.json" ]; then
+        ok=$((ok+1))
+      else
+        issues="$issues missing:$f"
+      fi
+    done
+
+    # Check schema
+    if ! grep -q '"schema": *"skb/v1"' "$p/.skb/project.json" 2>/dev/null; then
+      issues="$issues no-schema"
+    fi
+
+    # Check remote for secrets
+    local url=$(cd "$p" && git remote get-url origin 2>/dev/null)
+    if echo "$url" | grep -qE "ghp_|gho_|github_pat_"; then
+      issues="$issues SECRET-IN-REMOTE"
+    fi
+
+    # Git clean
+    local dirty=$(cd "$p" && git status -s 2>/dev/null | wc -l)
+    if [ "$dirty" -gt 0 ]; then
+      issues="$issues dirty:$dirty"
+    fi
+
+    if [ -z "$issues" ]; then
+      printf "  ${GREEN}✅${RESET} %-15s 6/6 files · clean · safe
+" "$name"
+    else
+      printf "  ${YELLOW}⚠️${RESET}  %-15s %s/6 files%s
+" "$name" "$ok" "$issues"
+    fi
+  done
 }
 
 cmd_projects() {
@@ -346,6 +438,7 @@ PYCTX
 # ─── Dispatch ───
 case "${1:-}" in
   "")         cmd_dashboard ;;
+  dashboard|d) cmd_dashboard --plain ;;
   projects|p) cmd_projects ;;
   status|s)   cmd_status ;;
   open|o)     cmd_open "$2" ;;
@@ -354,6 +447,7 @@ case "${1:-}" in
   todo|t)     cmd_todo "$2" ;;
   issues|i)   cmd_issues "$2" ;;
   cd)         cmd_cd "$2" ;;
+  doctor)   _skb_doctor ;;
   context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)
@@ -371,6 +465,7 @@ case "${1:-}" in
     echo "  skb context <name>      project context (human)"
     echo "  skb context <name> --ai AI-ready context block"
     echo "  skb context <name> --json raw JSON"
+    echo "  skb doctor              ecosystem health"
     ;;
   *)
     echo "${RED}Unknown command: $1${RESET}"

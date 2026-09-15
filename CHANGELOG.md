@@ -1,5 +1,17 @@
 # Changelog — SKB-Dev
 
+## [0.6.0] — 2026-09-16
+
+### Added
+- Interactive dashboard menu (`skb` with no args)
+- 9-item menu matching plan §11
+- `skb doctor` — ecosystem health scan
+- `skb dashboard` — non-interactive (scripts)
+- Health checks: files, schema, secrets, git status
+
+### Changed
+- version 0.5.0 → 0.6.0
+
 ## [0.5.0] — 2026-09-16
 
 ### Added
