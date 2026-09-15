@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "v1.0.0 \u2014 Data Bridge shipped, ecosystem stable",
-  "next_focus": "Shared AI layer (Life-OS/ai/)",
-  "progress": 100,
+  "current_focus": "v1.1.0 \u2014 Shared AI Layer registered",
+  "next_focus": "Wire runtimes to read from Life-OS/ai/",
+  "progress": 50,
   "build": "ready",
   "tests": "none",
   "git": {

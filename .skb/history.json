@@ -30,6 +30,19 @@
         "Cross-project feature matrix (38 features)",
         "Data Bridge (export \u2192 validate \u2192 diff \u2192 import)"
       ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-09-16",
+      "tag": "v1.1.0",
+      "commit": null,
+      "highlights": [
+        "Shared AI Layer (Life-OS/ai/)",
+        "3 prompts: daily_plan, daily_review, council_question",
+        "Council spec: 11 brains + protocol",
+        "Policies: privacy, safety, identity, boundaries",
+        "I/O schema: standard request/response contract"
+      ]
     }
   ],
   "milestones": [

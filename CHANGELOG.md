@@ -1,5 +1,19 @@
 # Changelog — SKB-Dev
 
+## [1.1.0] — 2026-09-16
+
+### Added
+- **Shared AI Layer** at `~/Life-OS/ai/`
+- 3 runtime-agnostic prompts (daily_plan, daily_review, council_question)
+- Council spec — 11 brains + protocol
+- AI policies — privacy, safety, identity, boundaries, transparency, model-agnostic
+- Provider routing spec (7 providers, fallback rules)
+- I/O schema — standard request/response contract
+
+### Changed
+- version 1.0.0 → 1.1.0
+
+
 ## [1.0.0] — 2026-09-16 — "Foundation"
 
 **First stable release.** SKB Dev Ecosystem control plane complete.
