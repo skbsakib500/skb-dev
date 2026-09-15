@@ -1,0 +1,11 @@
+{
+  "schema": "skb/v1",
+  "assets": [
+    {
+      "type": "icon | image | font | audio | video | web | data | config",
+      "path": "<file-or-glob>",
+      "purpose": "<why it exists>",
+      "version": "<optional>"
+    }
+  ]
+}

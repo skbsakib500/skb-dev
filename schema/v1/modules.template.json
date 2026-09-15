@@ -1,0 +1,13 @@
+{
+  "schema": "skb/v1",
+  "modules": [
+    {
+      "name": "<module-id>",
+      "path": "<file-or-dir>",
+      "type": "feature | core | util | ui | data | service | bridge",
+      "role": "<one-line purpose>",
+      "status": "active | planned | deprecated",
+      "dependencies": []
+    }
+  ]
+}

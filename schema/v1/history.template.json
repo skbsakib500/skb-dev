@@ -1,0 +1,26 @@
+{
+  "schema": "skb/v1",
+  "releases": [
+    {
+      "version": "0.0.0",
+      "date": "YYYY-MM-DD",
+      "tag": "v0.0.0",
+      "commit": "<sha>",
+      "highlights": []
+    }
+  ],
+  "milestones": [
+    {
+      "name": "<milestone>",
+      "date": "YYYY-MM-DD",
+      "note": "<optional>"
+    }
+  ],
+  "events": [
+    {
+      "type": "created | major-change | refactor | security-incident | recovery",
+      "date": "YYYY-MM-DD",
+      "summary": "<one-line>"
+    }
+  ]
+}

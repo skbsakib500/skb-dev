@@ -1,0 +1,22 @@
+{
+  "schema": "skb/v1",
+  "id": "skb-<id>",
+  "name": "<Display Name>",
+  "type": "android-app | python-app | cli-tool | web-app | library",
+  "subtype": "<optional, free-text>",
+  "version": "<semver>",
+  "status": "active | paused | archived",
+  "author": {
+    "name": "SKB Dev",
+    "email": "msakibalmhamud5@gmail.com",
+    "github": "skbsakib500"
+  },
+  "repo": {
+    "remote": "https://github.com/skbsakib500/<repo>.git",
+    "branch": "main"
+  },
+  "stack": [],
+  "companions": [],
+  "created": "YYYY-MM-DD",
+  "last_touched": "YYYY-MM-DD"
+}

@@ -25,3 +25,8 @@ Reads `.skb/` metadata from each project.
 ## Version
 
 v0.2.0 — 2026-09-16
+
+
+## Schema
+
+See `schema/v1/README.md` — canonical `.skb/` contract.

@@ -1,0 +1,17 @@
+{
+  "schema": "skb/v1",
+  "current_focus": "<what you are working on right now>",
+  "next_focus": "<what comes after>",
+  "progress": 0,
+  "build": "unknown | ready | broken",
+  "tests": "unknown | passing | failing | none",
+  "git": {
+    "branch": "main",
+    "head": "<short-sha>",
+    "head_subject": "<commit subject>",
+    "clean": true,
+    "ahead_of_remote": 0,
+    "last_tag": null
+  },
+  "known_issues_open": []
+}
