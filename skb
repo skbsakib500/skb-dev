@@ -1302,7 +1302,7 @@ _bridge_import() {
   fi
 
   python3 - "$db" "$file" "$mode" <<'PYIMP'
-import json, sqlite3, sys
+import json, sqlite3, sys, os
 
 db, file, mode = sys.argv[1], sys.argv[2], sys.argv[3]
 data = json.load(open(file))
@@ -1310,21 +1310,18 @@ data = json.load(open(file))
 conn = sqlite3.connect(db)
 conn.row_factory = sqlite3.Row
 
+schema = json.load(open(os.path.expanduser("~/Life-OS/schema.json")))
+
 inserted = 0
 updated = 0
 skipped = 0
+unchanged = 0
 
 for ename, rows in data.get("entities", {}).items():
     if not rows:
         continue
-    # Get table name from row fields — need to know table
-    # We rely on the entity name mapping (Task→tasks, etc.)
-    # Simple heuristic: try common patterns
-    # Better: load schema.json
-    import os
-    schema = json.load(open(os.path.expanduser("~/Life-OS/schema.json")))
     if ename not in schema["entities"]:
-        print(f"  ⚠️  unknown entity {ename}, skipping")
+        print(f"  WARN unknown entity {ename}, skipping")
         continue
     table = schema["entities"][ename]["table"]
 
@@ -1335,7 +1332,7 @@ for ename, rows in data.get("entities", {}).items():
         try:
             exists = conn.execute(f"SELECT 1 FROM {table} WHERE id=?", (r["id"],)).fetchone()
         except sqlite3.OperationalError:
-            print(f"  ⚠️  table {table} missing, skipping")
+            print(f"  WARN table {table} missing, skipping")
             break
 
         if exists:
@@ -1347,6 +1344,9 @@ for ename, rows in data.get("entities", {}).items():
                     vals = list(diffs.values()) + [r["id"]]
                     conn.execute(f"UPDATE {table} SET {sets} WHERE id=?", vals)
                 updated += 1
+            else:
+                unchanged += 1
+        else:
             if mode == "confirm":
                 cols = ", ".join(r.keys())
                 qs = ", ".join("?" * len(r))
@@ -1355,16 +1355,17 @@ for ename, rows in data.get("entities", {}).items():
 
 if mode == "confirm":
     conn.commit()
-    print(f"  ✅ committed")
+    print(f"  COMMITTED")
 else:
-    print(f"  ℹ️  dry-run (no changes)")
+    print(f"  DRY-RUN (no changes)")
 
 conn.close()
 
 print()
-print(f"  Would insert: {inserted}")
-print(f"  Would update: {updated}")
-print(f"  Skipped:      {skipped}")
+print(f"  Would insert:  {inserted}")
+print(f"  Would update:  {updated}")
+print(f"  Unchanged:     {unchanged}")
+print(f"  Skipped:       {skipped}")
 print()
 if mode == "dry-run":
     print("  To apply: rerun with --confirm")
