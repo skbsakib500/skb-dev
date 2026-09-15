@@ -473,50 +473,44 @@ _scan_project() {
 
   echo "${BOLD}${CYAN}─── $name ───${RESET}"
 
-  # 1. Remote URL check
-  local url=$(cd "$p" && git remote get-url origin 2>/dev/null)
+  # 1. Remote URL check (no cd)
+  local url
+  url=$(git -C "$p" remote get-url origin 2>/dev/null)
   if echo "$url" | grep -qE "ghp_|gho_|github_pat_|glpat-"; then
     echo "  ${RED}🔴 SECRET IN REMOTE URL${RESET}"
-    echo "      $(echo "$url" | sed 's|[A-Za-z0-9_-]*@|***@|g')"
     issues=$((issues+1))
   else
-    echo "  ${GREEN}✅${RESET} remote URL clean"
+    echo "  ${GREEN}✅${RESET} remote clean"
   fi
 
-  # 2. Tracked files scan
-  cd "$p" 2>/dev/null
-  local hits=$(git ls-files 2>/dev/null | while read f; do
-    [ -f "$f" ] || continue
-    file "$f" 2>/dev/null | grep -q text || continue
-    grep -lE "ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9]{30,}|AIza[A-Za-z0-9_-]{30,}|gsk_[A-Za-z0-9]{30,}" "$f" 2>/dev/null
-  done)
+  # 2. Tracked files — git grep (C-based, fast, low memory)
+  local hits
+  hits=$(git -C "$p" grep -l -I -E \
+    "ghp_[A-Za-z0-9]{30,}|gho_[A-Za-z0-9]{30,}|sk-[A-Za-z0-9]{30,}|AIza[A-Za-z0-9_-]{30,}|gsk_[A-Za-z0-9]{30,}" \
+    2>/dev/null | head -5)
   if [ -n "$hits" ]; then
-    echo "  ${RED}🔴 secrets in tracked files:${RESET}"
+    echo "  ${RED}🔴 secrets in:${RESET}"
     echo "$hits" | sed 's/^/      /'
     issues=$((issues+1))
   else
-    echo "  ${GREEN}✅${RESET} no secrets in tracked files"
+    echo "  ${GREEN}✅${RESET} tracked files clean"
   fi
 
   # 3. .env safety
-  if [ -f ".env" ]; then
-    if grep -qE "^\.env$|^\.env$" .gitignore 2>/dev/null || grep -q "\.env" .gitignore 2>/dev/null; then
-      echo "  ${GREEN}✅${RESET} .env exists + gitignored"
+  if [ -f "$p/.env" ]; then
+    if grep -q "\.env" "$p/.gitignore" 2>/dev/null; then
+      echo "  ${GREEN}✅${RESET} .env present + ignored"
     else
-      echo "  ${YELLOW}⚠️${RESET}  .env exists but NOT in .gitignore"
+      echo "  ${YELLOW}⚠️${RESET}  .env present, not in .gitignore"
       issues=$((issues+1))
     fi
   fi
 
-  # 4. .git/config exposed
-  if [ -f ".git/config" ]; then
-    if grep -qE "ghp_|gho_|github_pat_" ".git/config" 2>/dev/null; then
-      echo "  ${RED}🔴 secret in .git/config${RESET}"
-      issues=$((issues+1))
-    fi
+  # 4. .git/config secret
+  if grep -qE "ghp_|gho_|github_pat_" "$p/.git/config" 2>/dev/null; then
+    echo "  ${RED}🔴 secret in .git/config${RESET}"
+    issues=$((issues+1))
   fi
-
-  cd - >/dev/null 2>&1
 
   if [ "$issues" -eq 0 ]; then
     echo "  ${GREEN}✅ CLEAN${RESET}"
@@ -636,6 +630,159 @@ HOOKEOF
   esac
 }
 
+# ─── RELEASE ENGINE (Phase 6) ───
+
+cmd_release() {
+  local name="$1"
+  local version="$2"
+
+  if [ -z "$name" ] || [ -z "$version" ]; then
+    echo "usage: skb release <project> <version>"
+    echo "  e.g. skb release SKB-Player 2.5.0"
+    return 1
+  fi
+
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && p=$(find_projects | grep -i "/$name" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+
+  local proj_name=$(basename "$p")
+  echo "${BOLD}${CYAN}═══ RELEASE — $proj_name v$version ═══${RESET}"
+  echo ""
+
+  cd "$p" || return 1
+
+  # ─── Preflight ───
+  echo "${BOLD}[1/7]${RESET} Preflight"
+
+  if [ ! -d ".skb" ]; then
+    echo "  ${RED}🔴 no .skb/${RESET}"; return 1
+  fi
+
+  for f in project state history config modules assets; do
+    [ -f ".skb/$f.json" ] || { echo "  ${RED}🔴 missing .skb/$f.json${RESET}"; return 1; }
+  done
+  echo "  ✅ 6/6 .skb/ files"
+
+  local cur=$(python3 -c "import json; print(json.load(open('.skb/project.json')).get('version','?'))")
+  echo "  ${DIM}current: v$cur → v$version${RESET}"
+
+  # ─── Clean check ───
+  echo "${BOLD}[2/7]${RESET} Working tree"
+  if [ -n "$(git status -s)" ]; then
+    echo "  ${YELLOW}⚠️  uncommitted changes:${RESET}"
+    git status -s | head -10 | sed 's/^/      /'
+    printf "  Continue anyway? [y/N] "
+    read -r ans
+    case "$ans" in y|Y|yes) ;; *) echo "  ${RED}aborted${RESET}"; return 1 ;; esac
+  else
+    echo "  ✅ clean"
+  fi
+
+  # ─── Bump version ───
+  echo "${BOLD}[3/7]${RESET} Bump version"
+  python3 - "$version" <<'PYVER'
+import json, sys, re, os
+v = sys.argv[1]
+p = ".skb/project.json"
+d = json.load(open(p))
+d["version"] = v
+d["last_touched"] = "2026-09-16"
+json.dump(d, open(p, "w"), indent=2)
+
+# Android: versionName in build.gradle(.kts)
+for f in ["app/build.gradle.kts", "app/build.gradle"]:
+    if os.path.exists(f):
+        s = open(f).read()
+        s = re.sub(r'versionName\s+"[^"]*"', f'versionName "{v}"', s, count=1)
+        s = re.sub(r'versionName\s*=\s*"[^"]*"', f'versionName = "{v}"', s, count=1)
+        open(f, "w").write(s)
+        print(f"  ✅ bumped {f}")
+PYVER
+  echo "  ✅ .skb/project.json"
+
+  # ─── CHANGELOG ───
+  echo "${BOLD}[4/7]${RESET} CHANGELOG"
+  local date=$(date +%Y-%m-%d)
+  python3 - "$version" "$date" <<'PYCH'
+import sys, os
+v, d = sys.argv[1], sys.argv[2]
+f = "CHANGELOG.md"
+if not os.path.exists(f):
+    open(f, "w").write(f"# Changelog\n\n## [{v}] — {d}\n\n### Changed\n- Version {v}\n")
+    print(f"  ✅ created CHANGELOG.md")
+    sys.exit()
+s = open(f).read()
+if f"## [{v}]" in s:
+    print(f"  ⚠️  v{v} already in CHANGELOG")
+else:
+    # Insert after first heading
+    lines = s.split("\n", 1)
+    new = f"## [{v}] — {d}\n\n### Changed\n- Version {v}\n\n"
+    s = lines[0] + "\n\n" + new + (lines[1] if len(lines) > 1 else "")
+    open(f, "w").write(s)
+    print(f"  ✅ added v{v} section")
+PYCH
+
+  # ─── history.json ───
+  echo "${BOLD}[5/7]${RESET} history.json"
+  python3 - "$version" "$date" <<'PYH'
+import json, sys, subprocess
+v, d = sys.argv[1], sys.argv[2]
+f = ".skb/history.json"
+h = json.load(open(f))
+commit = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode().strip()
+h.setdefault("releases", []).append({
+    "version": v,
+    "date": d,
+    "tag": f"v{v}",
+    "commit": commit,
+    "highlights": [f"Release v{v}"]
+})
+json.dump(h, open(f, "w"), indent=2)
+print(f"  ✅ added release v{v}")
+PYH
+
+  # ─── state.json ───
+  echo "${BOLD}[6/7]${RESET} state.json"
+  python3 - "$version" <<'PYS'
+import json, sys
+v = sys.argv[1]
+f = ".skb/state.json"
+s = json.load(open(f))
+s["git"]["last_tag"] = f"v{v}"
+s["git"]["clean"] = True
+json.dump(s, open(f, "w"), indent=2)
+print(f"  ✅ last_tag = v{v}")
+PYS
+
+  # ─── Commit + tag + push ───
+  echo "${BOLD}[7/7]${RESET} Commit + tag"
+  echo ""
+  git add -A
+  git status -s | sed 's/^/      /'
+
+  printf "  Commit + tag v$version? [y/N] "
+  read -r ans
+  case "$ans" in y|Y|yes) ;;
+    *) echo "  ${YELLOW}skipped commit (files still changed)${RESET}"; return 0 ;;
+  esac
+
+  git commit -m "release: v$version" || { echo "  ${RED}commit failed${RESET}"; return 1; }
+  git tag -a "v$version" -m "Release v$version"
+
+  printf "  Push to origin? [y/N] "
+  read -r ans
+  case "$ans" in y|Y|yes)
+    git push origin main
+    git push origin "v$version"
+    echo "  ${GREEN}✅ pushed + tagged${RESET}"
+    ;;
+    *) echo "  ${YELLOW}committed + tagged locally, not pushed${RESET}" ;;
+  esac
+}
+
 # ─── Dispatch ───
 case "${1:-}" in
   "")         cmd_dashboard ;;
@@ -652,6 +799,7 @@ case "${1:-}" in
   audit)      cmd_audit "$2" ;;
   guard)      cmd_guard "$2" "$3" ;;
   doctor)   _skb_doctor ;;
+  release|r) cmd_release "$2" "$3" ;;
   context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)
