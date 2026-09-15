@@ -56,6 +56,18 @@
         "Cross-runtime verified \u2014 same spec, both runtimes",
         "Architecture: spec = canonical, runtime = adapter"
       ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-09-16",
+      "tag": "v1.3.0",
+      "commit": null,
+      "highlights": [
+        "Portfolio polish (Phase C)",
+        "LICENSE \u2014 Apache 2.0",
+        "README rewrite \u2014 flagship documentation",
+        "GitHub issue templates"
+      ]
     }
   ],
   "milestones": [

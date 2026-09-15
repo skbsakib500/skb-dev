@@ -1,7 +1,7 @@
 {
   "schema": "skb/v1",
-  "current_focus": "v1.2.0 \u2014 Runtime Wiring shipped",
-  "next_focus": "Phase C \u2014 portfolio polish",
+  "current_focus": "v1.3.0 \u2014 Portfolio polish",
+  "next_focus": "Phase B \u2014 real feature work",
   "progress": 100,
   "build": "ready",
   "tests": "none",
