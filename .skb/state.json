@@ -1,7 +1,17 @@
 {
-  "as_of": "2026-09-16",
-  "version": "0.2.0",
-  "commands": ["dashboard","projects","status","open","all","log","todo","issues","cd"],
-  "current_focus": "v0.2 — multi-project dashboard",
-  "next_focus": "v0.3 — actions (build, test, release)"
+  "schema": "skb/v1",
+  "current_focus": "Phase 1 — migrate 5 projects to SKB Schema v1",
+  "next_focus": "Phase 2 — populate modules.json + assets.json for all projects",
+  "progress": 20,
+  "build": "ready",
+  "tests": "none",
+  "git": {
+    "branch": "main",
+    "head": "e3b1559",
+    "head_subject": "feat(schema): lock SKB Schema v1",
+    "clean": true,
+    "ahead_of_remote": 0,
+    "last_tag": "v1-schema"
+  },
+  "known_issues_open": []
 }

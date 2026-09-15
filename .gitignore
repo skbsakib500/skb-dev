@@ -1,2 +1,11 @@
-__pycache__/
+# Shell
 *.log
+*.tmp
+.DS_Store
+
+# Backup
+*.bak
+*~
+
+# Local
+.cache/

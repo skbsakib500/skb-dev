@@ -1,0 +1,40 @@
+{
+  "schema": "skb/v1",
+  "assets": [
+    {
+      "type": "data",
+      "path": "skb",
+      "purpose": "The CLI executable (single bash file)"
+    },
+    {
+      "type": "config",
+      "path": ".skb/*.json",
+      "purpose": "Machine-readable project state (schema v1)"
+    },
+    {
+      "type": "data",
+      "path": "schema/v1/*.template.json",
+      "purpose": "Canonical template files for SKB Schema v1"
+    },
+    {
+      "type": "config",
+      "path": "schema/v1/README.md",
+      "purpose": "Schema v1 contract documentation"
+    },
+    {
+      "type": "data",
+      "path": "README.md",
+      "purpose": "Public usage guide"
+    },
+    {
+      "type": "data",
+      "path": "PROJECT.md",
+      "purpose": "Identity card"
+    },
+    {
+      "type": "config",
+      "path": ".gitignore",
+      "purpose": "Ignore rules"
+    }
+  ]
+}

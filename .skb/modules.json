@@ -1,0 +1,117 @@
+{
+  "schema": "skb/v1",
+  "modules": [
+    {
+      "name": "cli-entry",
+      "path": "skb",
+      "type": "core",
+      "role": "Main dispatcher — parses args, routes to commands",
+      "status": "active",
+      "dependencies": []
+    },
+    {
+      "name": "cmd-dashboard",
+      "path": "skb#cmd_dashboard",
+      "type": "feature",
+      "role": "Master menu — project counts, clean/dirty, next actions",
+      "status": "active",
+      "dependencies": ["find-projects", "status-of"]
+    },
+    {
+      "name": "cmd-projects",
+      "path": "skb#cmd_projects",
+      "type": "feature",
+      "role": "Table view of all registered projects",
+      "status": "active",
+      "dependencies": ["find-projects", "status-of", "jget"]
+    },
+    {
+      "name": "cmd-status",
+      "path": "skb#cmd_status",
+      "type": "feature",
+      "role": "Deep view of current project (identity, git, focus, issues)",
+      "status": "active",
+      "dependencies": ["jget", "status-of"]
+    },
+    {
+      "name": "cmd-open",
+      "path": "skb#cmd_open",
+      "type": "feature",
+      "role": "Show PROJECT.md summary of a project",
+      "status": "active",
+      "dependencies": ["find-projects"]
+    },
+    {
+      "name": "cmd-all",
+      "path": "skb#cmd_all",
+      "type": "feature",
+      "role": "Detailed view across all projects",
+      "status": "active",
+      "dependencies": ["find-projects", "status-of", "jget"]
+    },
+    {
+      "name": "cmd-log",
+      "path": "skb#cmd_log",
+      "type": "feature",
+      "role": "Recent git commits for a project",
+      "status": "active",
+      "dependencies": ["find-projects"]
+    },
+    {
+      "name": "cmd-todo",
+      "path": "skb#cmd_todo",
+      "type": "feature",
+      "role": "Open TODO items from a project's TODO.md",
+      "status": "active",
+      "dependencies": ["find-projects"]
+    },
+    {
+      "name": "cmd-issues",
+      "path": "skb#cmd_issues",
+      "type": "feature",
+      "role": "Open issues from a project's KNOWN-ISSUES.md",
+      "status": "active",
+      "dependencies": ["find-projects"]
+    },
+    {
+      "name": "cmd-cd",
+      "path": "skb#cmd_cd",
+      "type": "feature",
+      "role": "Print cd path to a project",
+      "status": "active",
+      "dependencies": ["find-projects"]
+    },
+    {
+      "name": "util-find-projects",
+      "path": "skb#find_projects",
+      "type": "util",
+      "role": "Find all .skb/ directories under $HOME",
+      "status": "active",
+      "dependencies": []
+    },
+    {
+      "name": "util-status-of",
+      "path": "skb#status_of",
+      "type": "util",
+      "role": "Git status classifier (clean / dirty:N)",
+      "status": "active",
+      "dependencies": []
+    },
+    {
+      "name": "util-jget",
+      "path": "skb#jget",
+      "type": "util",
+      "role": "Extract top-level string field from a JSON file",
+      "status": "active",
+      "dependencies": []
+    },
+    {
+      "name": "schema-v1",
+      "path": "schema/v1/",
+      "type": "data",
+      "role": "Canonical .skb/ contract templates + documentation",
+      "status": "active",
+      "dependencies": []
+    }
+  ]
+}

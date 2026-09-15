@@ -1,0 +1,36 @@
+{
+  "schema": "skb/v1",
+  "releases": [
+    {
+      "version": "0.2.0",
+      "date": "2026-09-16",
+      "tag": null,
+      "commit": "b6f61a3",
+      "highlights": [
+        "Unified command center CLI",
+        "9 commands: dashboard, projects, status, open, all, log, todo, issues, cd",
+        "Reads .skb/ metadata from all projects",
+        "Zero dependencies (bash + coreutils + git)"
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "name": "Schema v1 locked",
+      "date": "2026-09-16",
+      "note": "Canonical .skb/ contract — 6 templates + docs, tagged v1-schema"
+    },
+    {
+      "name": "Dogfood — SKB-Dev obeys own contract",
+      "date": "2026-09-16",
+      "note": "First project migrated to schema v1"
+    }
+  ],
+  "events": [
+    {
+      "type": "created",
+      "date": "2026-09-16",
+      "summary": "SKB Dev CLI project initialized"
+    }
+  ]
+}
