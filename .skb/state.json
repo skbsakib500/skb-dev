@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Phase 4 \u2014 interactive dashboard shipped",
-  "next_focus": "Phase 5 \u2014 security + doctor hardening",
-  "progress": 75,
+  "current_focus": "Phase 5 \u2014 security scan + audit + guard shipped",
+  "next_focus": "Phase 6 \u2014 Release Engine",
+  "progress": 85,
   "build": "ready",
   "tests": "none",
   "git": {

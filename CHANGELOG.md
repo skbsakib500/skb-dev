@@ -1,5 +1,17 @@
 # Changelog — SKB-Dev
 
+## [0.7.0] — 2026-09-16
+
+### Added
+- `skb scan <project>` — secret scan on tracked files
+- `skb scan --all` — ecosystem-wide
+- `skb audit <project>` — rule compliance check
+- `skb guard install` — pre-commit secret hook
+- `skb guard status` / `uninstall`
+
+### Changed
+- version 0.6.0 → 0.7.0
+
 ## [0.6.0] — 2026-09-16
 
 ### Added
