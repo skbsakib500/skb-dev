@@ -41,3 +41,14 @@ Every spec file is committed and reviewed through git.
 - Never edit `~/Life-OS/*.json` directly (they are symlinks)
 - Edit here, then `skb lifos doctor` will pick up changes
 - `history.json` for Life OS is append-only (in bridge/exports)
+
+## Status (2026-09-16)
+
+✅ Verified working:
+- `~/Life-OS/VERSION` → symlink resolves to `13.0.0`
+- `~/Life-OS/features.json` → reads canonical features
+- `~/Life-OS/ai/` → resolves to spec/lifos/ai/
+- `skb lifos` → reads through symlinks
+
+Single source of truth active. Editing spec here changes
+runtime behavior immediately.
