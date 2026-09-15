@@ -1,5 +1,18 @@
 # Changelog — SKB-Dev
 
+## [0.4.0] — 2026-09-16
+
+### Added
+- Ecosystem registries (Phase 2)
+- `registry/build.sh` — aggregator across all `.skb/` projects
+- `registry/ecosystem.json` — project index
+- `registry/modules.json` — all modules merged
+- `registry/assets.json` — all assets merged
+- `registry/schema.json` — schema version lock
+
+### Changed
+- version 0.3.0 → 0.4.0
+
 ## [0.3.0] — 2026-09-16
 
 ### Added

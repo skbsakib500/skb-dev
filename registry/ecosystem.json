@@ -1,0 +1,69 @@
+{
+  "schema": "skb/v1",
+  "generated": "2026-09-16T01:38:18.886200",
+  "project_count": 5,
+  "module_count": 164,
+  "asset_count": 64,
+  "projects": [
+    {
+      "name": "Agent-Mimi",
+      "id": "skb-agent-mimi",
+      "type": "python-app",
+      "version": "12.0.0",
+      "status": "active",
+      "path": "/data/data/com.termux/files/home/Agent-Mimi",
+      "repo": "https://github.com/skbsakib500/agent-mimi.git",
+      "stack_count": 5,
+      "module_count": 43,
+      "asset_count": 13
+    },
+    {
+      "name": "Mimi-Android",
+      "id": "skb-mimi-android",
+      "type": "android-app",
+      "version": "1.1.0",
+      "status": "active",
+      "path": "/data/data/com.termux/files/home/Mimi-Android",
+      "repo": "https://github.com/skbsakib500/mimi-android.git",
+      "stack_count": 8,
+      "module_count": 49,
+      "asset_count": 19
+    },
+    {
+      "name": "SKB-Dev",
+      "id": "skb-dev",
+      "type": "cli-tool",
+      "version": "0.3.0",
+      "status": "active",
+      "path": "/data/data/com.termux/files/home/SKB-Dev",
+      "repo": "https://github.com/skbsakib500/skb-dev.git",
+      "stack_count": 3,
+      "module_count": 14,
+      "asset_count": 7
+    },
+    {
+      "name": "SKB-Music",
+      "id": "skb-music",
+      "type": "android-app",
+      "version": "2.2.0",
+      "status": "active",
+      "path": "/data/data/com.termux/files/home/SKB-Music",
+      "repo": "https://github.com/skbsakib500/SKB-Music.git",
+      "stack_count": 11,
+      "module_count": 36,
+      "asset_count": 13
+    },
+    {
+      "name": "SKB-Player",
+      "id": "skb-player",
+      "type": "android-app",
+      "version": "2.4.0",
+      "status": "active",
+      "path": "/data/data/com.termux/files/home/SKB-Player",
+      "repo": "https://github.com/skbsakib500/SKB-Player.git",
+      "stack_count": 6,
+      "module_count": 22,
+      "asset_count": 12
+    }
+  ]
+}

@@ -4,7 +4,7 @@
   "name": "SKB Dev CLI",
   "type": "cli-tool",
   "subtype": "bash",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "status": "active",
   "author": {
     "name": "SKB Dev",
@@ -15,14 +15,18 @@
     "remote": "https://github.com/skbsakib500/skb-dev.git",
     "branch": "main"
   },
-  "stack": ["bash", "coreutils", "git"],
+  "stack": [
+    "bash",
+    "coreutils",
+    "git"
+  ],
   "companions": [
     "skb-agent-mimi",
     "skb-mimi-android",
     "skb-player",
     "skb-music"
   ],
-  "purpose": "Unified command center across all SKB projects — the control plane",
+  "purpose": "Unified command center across all SKB projects \u2014 the control plane",
   "created": "2026-09-16",
   "last_touched": "2026-09-16"
 }

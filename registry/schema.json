@@ -1,0 +1,14 @@
+{
+  "schema": "skb/v1",
+  "locked": "2026-09-16",
+  "projects": 5,
+  "files_per_project": 6,
+  "required_files": [
+    "project.json",
+    "state.json",
+    "history.json",
+    "config.json",
+    "modules.json",
+    "assets.json"
+  ]
+}

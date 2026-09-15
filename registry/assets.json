@@ -1,0 +1,456 @@
+{
+  "schema": "skb/v1",
+  "generated": "2026-09-16T01:38:18.891782",
+  "count": 64,
+  "assets": [
+    {
+      "type": "config",
+      "path": ".env",
+      "purpose": "API keys (DEEPSEEK_API_KEY, etc.) \u2014 NEVER committed",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "data/mimi.db",
+      "purpose": "Main SQLite database \u2014 runtime, not committed",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "data/profiles/*/mimi.db",
+      "purpose": "Per-profile databases \u2014 runtime",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "data/audit.chain",
+      "purpose": "Signed audit chain \u2014 runtime, not committed",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "data/audit.jsonl",
+      "purpose": "Append-only audit log \u2014 runtime",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "web",
+      "path": "mimi/web/ios/shell.py",
+      "purpose": "iOS PWA single-page UI (embedded HTML/CSS/JS)",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "web",
+      "path": "mimi/web/ios/pwa.py",
+      "purpose": "PWA manifest",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "web",
+      "path": "mimi/web/ios/sw.py",
+      "purpose": "Service worker (offline)",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "config",
+      "path": ".gitignore",
+      "purpose": "Ignore rules \u2014 secrets, runtime DB, backups",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "backups/",
+      "purpose": "ZIP archives (v2 \u2192 v12) \u2014 runtime",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "reports/",
+      "purpose": "Generated reports (AI plan, reviews) \u2014 runtime",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "CHANGELOG.md",
+      "purpose": "Version history",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "data",
+      "path": "README.md",
+      "purpose": "Public overview",
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/index.html",
+      "purpose": "WebView shell + script loader (40 scripts)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/app.js",
+      "purpose": "Main router (43K)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/style.css",
+      "purpose": "iOS-style stylesheet (29K)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/assets/data.json",
+      "purpose": "Mock data for browser dev (untracked)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/assets/mimi.db",
+      "purpose": "Dev SQLite database (untracked)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/core/",
+      "purpose": "6 core JS modules (store, actions, crud, sheets, gestures)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/ui/",
+      "purpose": "Animation engine (motion.js)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "web",
+      "path": "app/src/main/assets/tools/",
+      "purpose": "33 feature modules",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/python/",
+      "purpose": "Python bridge + boot + nusrat offline",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/java/",
+      "purpose": "Java host: Main, Splash, NativeBridge",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "image",
+      "path": "app/src/main/res/",
+      "purpose": "App icons, splash drawables, strings",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "config",
+      "path": "app/build.gradle",
+      "purpose": "App module build \u2014 deps, SDK, Chaquopy",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "config",
+      "path": "build.gradle",
+      "purpose": "Root Gradle (AGP 8.5.2, Chaquopy plugin)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "config",
+      "path": ".github/workflows/build.yml",
+      "purpose": "CI \u2014 build debug APK",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "config",
+      ".gitignore": "x",
+      "path": ".gitignore",
+      "purpose": "Ignore rules \u2014 build, IDE, .bak, secrets",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "RELEASE_NOTES_v1.1.0.md",
+      "purpose": "v1.1.0 release notes",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "CHANGELOG.md",
+      "purpose": "Version history",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "PROJECT.md",
+      "purpose": "Identity card",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": ".skb/",
+      "purpose": "Machine-readable project state (schema v1)",
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "type": "data",
+      "path": "skb",
+      "purpose": "The CLI executable (single bash file)",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "config",
+      "path": ".skb/*.json",
+      "purpose": "Machine-readable project state (schema v1)",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "data",
+      "path": "schema/v1/*.template.json",
+      "purpose": "Canonical template files for SKB Schema v1",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "config",
+      "path": "schema/v1/README.md",
+      "purpose": "Schema v1 contract documentation",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "data",
+      "path": "README.md",
+      "purpose": "Public usage guide",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "data",
+      "path": "PROJECT.md",
+      "purpose": "Identity card",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "config",
+      "path": ".gitignore",
+      "purpose": "Ignore rules",
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "type": "config",
+      "path": "app/build.gradle.kts",
+      "purpose": "App build \u2014 Compose, Media3, Room, DataStore, Coil",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": "build.gradle.kts",
+      "purpose": "Root Gradle (AGP 8.5.2, KSP)",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": "settings.gradle.kts",
+      "purpose": "Gradle settings",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": "gradle.properties",
+      "purpose": "Gradle props",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": ".github/workflows/build.yml",
+      "purpose": "CI \u2014 build debug APK",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": ".gitignore",
+      "purpose": "Ignore rules",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "image",
+      "path": "app/src/main/res/",
+      "purpose": "Icons, splash",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/java/",
+      "purpose": "36 Kotlin files (data/db, playback, equalizer, ui/screens, ui/components, viewmodel)",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": "docs/",
+      "purpose": "(empty \u2014 reserved for deep-dives)",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "data",
+      "path": "CHANGELOG.md",
+      "purpose": "Version history",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "data",
+      "path": "PROJECT.md",
+      "purpose": "Identity card",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "data",
+      "path": "README.md",
+      "purpose": "Public overview",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "data",
+      "path": ".skb/",
+      "purpose": "Machine-readable project state (schema v1)",
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "type": "config",
+      "path": "app/build.gradle.kts",
+      "purpose": "App build \u2014 Compose, Media3, SDK",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "config",
+      "path": "build.gradle.kts",
+      "purpose": "Root Gradle (AGP 8.5.2, Kotlin 1.9.24)",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "config",
+      "path": "settings.gradle.kts",
+      "purpose": "Gradle settings",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "config",
+      "path": "gradle.properties",
+      "purpose": "Gradle props",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "config",
+      "path": ".github/workflows/build.yml",
+      "purpose": "CI \u2014 build debug APK",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "config",
+      "path": ".gitignore",
+      "purpose": "Ignore rules",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "image",
+      "path": "app/src/main/res/",
+      "purpose": "Icons, splash drawables",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "data",
+      "path": "app/src/main/java/",
+      "purpose": "22 Kotlin files (MainActivity, PlaybackService, 12 ui, 9 library)",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "data",
+      "path": "CHANGELOG.md",
+      "purpose": "Version history",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "data",
+      "path": "PROJECT.md",
+      "purpose": "Identity card",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "data",
+      "path": "README.md",
+      "purpose": "Public overview",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "type": "data",
+      "path": ".skb/",
+      "purpose": "Machine-readable project state (schema v1)",
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    }
+  ]
+}

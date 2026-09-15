@@ -1,0 +1,1834 @@
+{
+  "schema": "skb/v1",
+  "generated": "2026-09-16T01:38:18.886983",
+  "count": 164,
+  "modules": [
+    {
+      "name": "core",
+      "path": "mimi/core/",
+      "type": "core",
+      "role": "Shared config (USER_NAME, constants)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "main",
+      "path": "mimi/main.py",
+      "type": "core",
+      "role": "Main menu + router dispatch",
+      "status": "active",
+      "dependencies": [
+        "core",
+        "router"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "router",
+      "path": "mimi/router.py",
+      "type": "core",
+      "role": "Route actions to modules",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "database",
+      "path": "mimi/database.py",
+      "type": "data",
+      "role": "SQLite wrapper + BASE_DIR",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "migrations",
+      "path": "mimi/migrations.py",
+      "type": "data",
+      "role": "Schema versioning + migrations",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "council",
+      "path": "mimi/council/",
+      "type": "service",
+      "role": "Council of 11 brains (Nusrat + 10 departments)",
+      "status": "active",
+      "dependencies": [
+        "database",
+        "core"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "trust",
+      "path": "mimi/trust/",
+      "type": "service",
+      "role": "HMAC constitution + audit chain verification",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "guardian",
+      "path": "mimi/guardian/",
+      "type": "service",
+      "role": "Sandbox, audit, auto-rollback",
+      "status": "active",
+      "dependencies": [
+        "trust"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "constitution",
+      "path": "mimi/constitution.py",
+      "type": "service",
+      "role": "HMAC-SHA256 signed constitution",
+      "status": "active",
+      "dependencies": [
+        "trust"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "agents",
+      "path": "mimi/agents/",
+      "type": "service",
+      "role": "Department worker agents",
+      "status": "active",
+      "dependencies": [
+        "core"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "health",
+      "path": "mimi/health/",
+      "type": "service",
+      "role": "System diagnostics",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "upgrade",
+      "path": "mimi/upgrade/",
+      "type": "service",
+      "role": "Self-update lab (sandbox testing)",
+      "status": "active",
+      "dependencies": [
+        "guardian"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "plug_store",
+      "path": "mimi/plug_store/",
+      "type": "service",
+      "role": "Plugin registry",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "tui",
+      "path": "mimi/tui2.py",
+      "type": "ui",
+      "role": "Main Nova TUI (curses)",
+      "status": "active",
+      "dependencies": [
+        "ui2",
+        "router"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ui2",
+      "path": "mimi/ui2/",
+      "type": "ui",
+      "role": "TUI framework \u2014 theme, icons, widgets, layout, anim",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "tui-android",
+      "path": "mimi/tui_android.py",
+      "type": "ui",
+      "role": "Android-style TUI",
+      "status": "active",
+      "dependencies": [
+        "ui2"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "sonic",
+      "path": "mimi/sonic.py",
+      "type": "ui",
+      "role": "Sonic CLI interface",
+      "status": "active",
+      "dependencies": [
+        "router"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "classic-tui",
+      "path": "mimi/ui.py",
+      "type": "ui",
+      "role": "Classic menu interface",
+      "status": "active",
+      "dependencies": [
+        "router"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "tui-helpers",
+      "path": "mimi/tui_*.py",
+      "type": "ui",
+      "role": "TUI helpers \u2014 modal, palette, themes, search, charts",
+      "status": "active",
+      "dependencies": [
+        "ui2"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "web-server",
+      "path": "mimi/web/server.py",
+      "type": "service",
+      "role": "HTTP server (stdlib http.server)",
+      "status": "active",
+      "dependencies": [
+        "database",
+        "router"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "web-ios",
+      "path": "mimi/web/ios/",
+      "type": "ui",
+      "role": "iOS PWA \u2014 shell, manifest, service worker, chat API",
+      "status": "active",
+      "dependencies": [
+        "web-server",
+        "ai-chat"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ai-plan",
+      "path": "mimi/ai_plan.py",
+      "type": "feature",
+      "role": "Daily plan generator (offline + AI)",
+      "status": "active",
+      "dependencies": [
+        "database",
+        "llm",
+        "api-weather"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ai-chat",
+      "path": "mimi/ai_chat.py",
+      "type": "feature",
+      "role": "Multi-AI chat session (history, provider pick)",
+      "status": "active",
+      "dependencies": [
+        "multi-ai"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ai-chat-tui",
+      "path": "mimi/ai_chat_tui.py",
+      "type": "ui",
+      "role": "Chat TUI frontend",
+      "status": "active",
+      "dependencies": [
+        "ai-chat",
+        "ui2"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ai-context",
+      "path": "mimi/ai_context.py",
+      "type": "feature",
+      "role": "Context builder for AI prompts",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "ai-review",
+      "path": "mimi/ai_review.py",
+      "type": "feature",
+      "role": "AI review engine (daily/weekly)",
+      "status": "active",
+      "dependencies": [
+        "llm"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "multi-ai",
+      "path": "mimi/multi_ai.py",
+      "type": "service",
+      "role": "Multi-provider AI queries (parallel)",
+      "status": "active",
+      "dependencies": [
+        "api-manager"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "llm",
+      "path": "mimi/llm.py",
+      "type": "service",
+      "role": "Provider loader (reads .env)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-manager",
+      "path": "mimi/api_manager.py",
+      "type": "service",
+      "role": "Provider registry",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-gemini",
+      "path": "mimi/api_gemini.py",
+      "type": "service",
+      "role": "Gemini provider",
+      "status": "active",
+      "dependencies": [
+        "api-manager"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-groq",
+      "path": "mimi/api_groq.py",
+      "type": "service",
+      "role": "Groq provider",
+      "status": "active",
+      "dependencies": [
+        "api-manager"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-google",
+      "path": "mimi/api_google.py",
+      "type": "service",
+      "role": "Google provider",
+      "status": "active",
+      "dependencies": [
+        "api-manager"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-http",
+      "path": "mimi/api_http.py",
+      "type": "service",
+      "role": "Generic HTTP provider (OpenRouter, Mistral, OpenAI, Anthropic, DeepSeek)",
+      "status": "active",
+      "dependencies": [
+        "api-manager"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "api-weather",
+      "path": "mimi/api_weather.py",
+      "type": "service",
+      "role": "Weather API",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "daemon",
+      "path": "mimi/daemon.py",
+      "type": "service",
+      "role": "24/7 scheduler (Termux:Boot)",
+      "status": "active",
+      "dependencies": [
+        "database",
+        "notify"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "telegram-bot",
+      "path": "mimi/telegram_bot.py",
+      "type": "service",
+      "role": "Telegram integration",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "domain-modules",
+      "path": "mimi/{tasks,goals,missions,finance,debts,study,journal,daily,time,sleep,routines,productivity,learning,health,mistakes,achievements,career,relationships,digital,faith,personas,automation,recommendations,predict,analytics,insights}.py",
+      "type": "feature",
+      "role": "26 domain modules \u2014 CRUD + logic for each life area",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "gamification",
+      "path": "mimi/{xp,levelup,badges,award,loyalty}.py",
+      "type": "feature",
+      "role": "XP, levels, badges, awards",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "data-ops",
+      "path": "mimi/{backup,sync,export,data_manager}.py",
+      "type": "data",
+      "role": "Backup, sync, export, data management",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "notify",
+      "path": "mimi/{notify,notify_setup,scheduler}.py",
+      "type": "service",
+      "role": "Notification system + setup",
+      "status": "active",
+      "dependencies": [
+        "database"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "briefing",
+      "path": "mimi/briefing.py",
+      "type": "feature",
+      "role": "Daily briefing generator",
+      "status": "active",
+      "dependencies": [
+        "database",
+        "llm"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "self-update",
+      "path": "mimi/self_update.py",
+      "type": "service",
+      "role": "Self-update mechanism",
+      "status": "active",
+      "dependencies": [
+        "upgrade"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "system-health",
+      "path": "mimi/system_health.py",
+      "type": "service",
+      "role": "System health checks",
+      "status": "active",
+      "dependencies": [
+        "health"
+      ],
+      "_project": "Agent-Mimi",
+      "_project_id": "skb-agent-mimi"
+    },
+    {
+      "name": "app-shell",
+      "path": "app/src/main/assets/index.html",
+      "type": "ui",
+      "role": "WebView HTML entry point + script loader",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "app-router",
+      "path": "app/src/main/assets/app.js",
+      "type": "core",
+      "role": "Main router, screens, state, bridge call wrapper",
+      "status": "active",
+      "dependencies": [
+        "store",
+        "actions",
+        "motion"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "styles",
+      "path": "app/src/main/assets/style.css",
+      "type": "ui",
+      "role": "iOS-style CSS (29K)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "store",
+      "path": "app/src/main/assets/core/store.js",
+      "type": "core",
+      "role": "State management",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "actions",
+      "path": "app/src/main/assets/core/actions.js",
+      "type": "core",
+      "role": "Action dispatcher",
+      "status": "active",
+      "dependencies": [
+        "store"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "crud",
+      "path": "app/src/main/assets/core/crud.js",
+      "type": "core",
+      "role": "Generic CRUD helpers",
+      "status": "active",
+      "dependencies": [
+        "actions"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "actionsheet",
+      "path": "app/src/main/assets/core/actionsheet.js",
+      "type": "ui",
+      "role": "Bottom sheet \u2014 add entries",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "editsheet",
+      "path": "app/src/main/assets/core/editsheet.js",
+      "type": "ui",
+      "role": "Bottom sheet \u2014 edit entries",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "gestures",
+      "path": "app/src/main/assets/core/gestures.js",
+      "type": "core",
+      "role": "Swipe, long-press gestures",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "motion",
+      "path": "app/src/main/assets/ui/motion.js",
+      "type": "ui",
+      "role": "Animation engine (Web Animations API, 25+ fns)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "finance",
+      "path": "app/src/main/assets/tools/finance.js",
+      "type": "feature",
+      "role": "Money \u2014 income/expense/borrowed/lent",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "debts",
+      "path": "app/src/main/assets/tools/debts.js",
+      "type": "feature",
+      "role": "Loans, payments",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "notes",
+      "path": "app/src/main/assets/tools/notes.js",
+      "type": "feature",
+      "role": "Notes with search + tags",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "sleep",
+      "path": "app/src/main/assets/tools/sleep.js",
+      "type": "feature",
+      "role": "Sleep tracking",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "routines",
+      "path": "app/src/main/assets/tools/routines.js",
+      "type": "feature",
+      "role": "Daily routines + toggle",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "productivity",
+      "path": "app/src/main/assets/tools/productivity.js",
+      "type": "feature",
+      "role": "Productivity tracking",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "learning",
+      "path": "app/src/main/assets/tools/learning.js",
+      "type": "feature",
+      "role": "Learning log",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "health",
+      "path": "app/src/main/assets/tools/health.js",
+      "type": "feature",
+      "role": "Health log",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "time",
+      "path": "app/src/main/assets/tools/time.js",
+      "type": "feature",
+      "role": "Time tracking",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "mistakes",
+      "path": "app/src/main/assets/tools/mistakes.js",
+      "type": "feature",
+      "role": "Mistakes log",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "achievements",
+      "path": "app/src/main/assets/tools/achievements.js",
+      "type": "feature",
+      "role": "Achievements",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "career",
+      "path": "app/src/main/assets/tools/career.js",
+      "type": "feature",
+      "role": "Career goals",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "relationships",
+      "path": "app/src/main/assets/tools/relationships.js",
+      "type": "feature",
+      "role": "Relationships",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "digital",
+      "path": "app/src/main/assets/tools/digital.js",
+      "type": "feature",
+      "role": "Digital wellness",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "faith",
+      "path": "app/src/main/assets/tools/faith.js",
+      "type": "feature",
+      "role": "Faith / spiritual",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "missions",
+      "path": "app/src/main/assets/tools/missions.js",
+      "type": "feature",
+      "role": "Missions",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "daily",
+      "path": "app/src/main/assets/tools/daily.js",
+      "type": "feature",
+      "role": "Daily log",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "analytics",
+      "path": "app/src/main/assets/tools/analytics.js",
+      "type": "feature",
+      "role": "Analytics dashboard",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "insights",
+      "path": "app/src/main/assets/tools/insights.js",
+      "type": "feature",
+      "role": "Insights",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "personas",
+      "path": "app/src/main/assets/tools/personas.js",
+      "type": "feature",
+      "role": "Persona system",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "automation",
+      "path": "app/src/main/assets/tools/automation.js",
+      "type": "feature",
+      "role": "Automation rules",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "recommendations",
+      "path": "app/src/main/assets/tools/recommendations.js",
+      "type": "feature",
+      "role": "Recommendations",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "predict",
+      "path": "app/src/main/assets/tools/predict.js",
+      "type": "feature",
+      "role": "Predictions",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "trust",
+      "path": "app/src/main/assets/tools/trust.js",
+      "type": "feature",
+      "role": "Trust layer UI",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "council",
+      "path": "app/src/main/assets/tools/council.js",
+      "type": "feature",
+      "role": "Council of brains UI",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "backup",
+      "path": "app/src/main/assets/tools/backup.js",
+      "type": "feature",
+      "role": "Backup + export",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "about",
+      "path": "app/src/main/assets/tools/about.js",
+      "type": "feature",
+      "role": "About screen",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "settings",
+      "path": "app/src/main/assets/tools/settings.js",
+      "type": "feature",
+      "role": "Settings + AI keys UI",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "native",
+      "path": "app/src/main/assets/tools/native.js",
+      "type": "feature",
+      "role": "Native bridge UI (torch, TTS, share)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "ai-plan",
+      "path": "app/src/main/assets/tools/ai_plan.js",
+      "type": "feature",
+      "role": "AI Daily Plan (offline B1)",
+      "status": "active",
+      "dependencies": [
+        "app-router"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "calculator",
+      "path": "app/src/main/assets/tools/calculator.js",
+      "type": "feature",
+      "role": "Calculator",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "civil",
+      "path": "app/src/main/assets/tools/civil.js",
+      "type": "feature",
+      "role": "Civil engineering calculator",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "pomodoro",
+      "path": "app/src/main/assets/tools/pomodoro.js",
+      "type": "feature",
+      "role": "Pomodoro timer",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "java-main",
+      "path": "app/src/main/java/com/skbsakib/mimi/MainActivity.java",
+      "type": "bridge",
+      "role": "WebView host + JS bridge injection",
+      "status": "active",
+      "dependencies": [
+        "py-bridge"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "java-splash",
+      "path": "app/src/main/java/com/skbsakib/mimi/SplashActivity.java",
+      "type": "ui",
+      "role": "Launch screen",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "java-native-bridge",
+      "path": "app/src/main/java/com/skbsakib/mimi/NativeBridge.java",
+      "type": "bridge",
+      "role": "@JavascriptInterface \u2014 notification, torch, TTS, share, vibrate",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "py-bridge",
+      "path": "app/src/main/python/mimi_android_bridge.py",
+      "type": "bridge",
+      "role": "Python \u2194 SQLite bridge (60K), trigger(action,args)",
+      "status": "active",
+      "dependencies": [
+        "py-boot"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "py-boot",
+      "path": "app/src/main/python/mimi_boot.py",
+      "type": "bridge",
+      "role": "Python bootstrap",
+      "status": "active",
+      "dependencies": [],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "py-nusrat-offline",
+      "path": "app/src/main/python/nusrat_offline.py",
+      "type": "feature",
+      "role": "Offline chat engine (bilingual, DB-aware)",
+      "status": "active",
+      "dependencies": [
+        "py-bridge"
+      ],
+      "_project": "Mimi-Android",
+      "_project_id": "skb-mimi-android"
+    },
+    {
+      "name": "cli-entry",
+      "path": "skb",
+      "type": "core",
+      "role": "Main dispatcher \u2014 parses args, routes to commands",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-dashboard",
+      "path": "skb#cmd_dashboard",
+      "type": "feature",
+      "role": "Master menu \u2014 project counts, clean/dirty, next actions",
+      "status": "active",
+      "dependencies": [
+        "find-projects",
+        "status-of"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-projects",
+      "path": "skb#cmd_projects",
+      "type": "feature",
+      "role": "Table view of all registered projects",
+      "status": "active",
+      "dependencies": [
+        "find-projects",
+        "status-of",
+        "jget"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-status",
+      "path": "skb#cmd_status",
+      "type": "feature",
+      "role": "Deep view of current project (identity, git, focus, issues)",
+      "status": "active",
+      "dependencies": [
+        "jget",
+        "status-of"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-open",
+      "path": "skb#cmd_open",
+      "type": "feature",
+      "role": "Show PROJECT.md summary of a project",
+      "status": "active",
+      "dependencies": [
+        "find-projects"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-all",
+      "path": "skb#cmd_all",
+      "type": "feature",
+      "role": "Detailed view across all projects",
+      "status": "active",
+      "dependencies": [
+        "find-projects",
+        "status-of",
+        "jget"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-log",
+      "path": "skb#cmd_log",
+      "type": "feature",
+      "role": "Recent git commits for a project",
+      "status": "active",
+      "dependencies": [
+        "find-projects"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-todo",
+      "path": "skb#cmd_todo",
+      "type": "feature",
+      "role": "Open TODO items from a project's TODO.md",
+      "status": "active",
+      "dependencies": [
+        "find-projects"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-issues",
+      "path": "skb#cmd_issues",
+      "type": "feature",
+      "role": "Open issues from a project's KNOWN-ISSUES.md",
+      "status": "active",
+      "dependencies": [
+        "find-projects"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "cmd-cd",
+      "path": "skb#cmd_cd",
+      "type": "feature",
+      "role": "Print cd path to a project",
+      "status": "active",
+      "dependencies": [
+        "find-projects"
+      ],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "util-find-projects",
+      "path": "skb#find_projects",
+      "type": "util",
+      "role": "Find all .skb/ directories under $HOME",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "util-status-of",
+      "path": "skb#status_of",
+      "type": "util",
+      "role": "Git status classifier (clean / dirty:N)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "util-jget",
+      "path": "skb#jget",
+      "type": "util",
+      "role": "Extract top-level string field from a JSON file",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "schema-v1",
+      "path": "schema/v1/",
+      "type": "data",
+      "role": "Canonical .skb/ contract templates + documentation",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Dev",
+      "_project_id": "skb-dev"
+    },
+    {
+      "name": "app",
+      "path": "app/src/main/java/com/skb/music/ui/SkbApp.kt",
+      "type": "core",
+      "role": "Nav host root",
+      "status": "active",
+      "dependencies": [
+        "viewmodel",
+        "data"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "constants",
+      "path": "app/src/main/java/com/skb/music/core/Constants.kt",
+      "type": "core",
+      "role": "App constants",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "repository",
+      "path": "app/src/main/java/com/skb/music/data/MusicRepository.kt",
+      "type": "data",
+      "role": "Single source of truth",
+      "status": "active",
+      "dependencies": [
+        "db",
+        "scanner"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "song-model",
+      "path": "app/src/main/java/com/skb/music/data/Song.kt",
+      "type": "data",
+      "role": "Domain model",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "scanner",
+      "path": "app/src/main/java/com/skb/music/data/MediaStoreScanner.kt",
+      "type": "service",
+      "role": "MediaStore audio scan",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "media-mapper",
+      "path": "app/src/main/java/com/skb/music/data/MediaItemMapper.kt",
+      "type": "data",
+      "role": "Song \u2194 MediaItem conversion",
+      "status": "active",
+      "dependencies": [
+        "song-model"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "db-entities",
+      "path": "app/src/main/java/com/skb/music/data/db/Entities.kt",
+      "type": "data",
+      "role": "Room @Entity classes",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "db-daos",
+      "path": "app/src/main/java/com/skb/music/data/db/Daos.kt",
+      "type": "data",
+      "role": "Room @Dao interfaces",
+      "status": "active",
+      "dependencies": [
+        "db-entities"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "db-database",
+      "path": "app/src/main/java/com/skb/music/data/db/SkbDatabase.kt",
+      "type": "data",
+      "role": "Room @Database",
+      "status": "active",
+      "dependencies": [
+        "db-entities",
+        "db-daos"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "viewmodel-player",
+      "path": "app/src/main/java/com/skb/music/viewmodel/PlayerViewModel.kt",
+      "type": "core",
+      "role": "Playback state via StateFlow",
+      "status": "active",
+      "dependencies": [
+        "repository",
+        "playback-service"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "viewmodel-library",
+      "path": "app/src/main/java/com/skb/music/viewmodel/LibraryViewModel.kt",
+      "type": "core",
+      "role": "Library state",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "playback-service",
+      "path": "app/src/main/java/com/skb/music/playback/PlaybackService.kt",
+      "type": "service",
+      "role": "MediaSessionService",
+      "status": "active",
+      "dependencies": [
+        "media3"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "replaygain",
+      "path": "app/src/main/java/com/skb/music/playback/ReplayGainManager.kt",
+      "type": "service",
+      "role": "Session-aware volume normalization",
+      "status": "active",
+      "dependencies": [
+        "playback-service"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "audio-effects",
+      "path": "app/src/main/java/com/skb/music/equalizer/AudioEffectsManager.kt",
+      "type": "service",
+      "role": "EQ + bass + virtualizer + visualizer",
+      "status": "active",
+      "dependencies": [
+        "playback-service"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "eq-prefs",
+      "path": "app/src/main/java/com/skb/music/equalizer/EqPreferences.kt",
+      "type": "data",
+      "role": "DataStore persistence",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "theme",
+      "path": "app/src/main/java/com/skb/music/ui/theme/Theme.kt",
+      "type": "ui",
+      "role": "Material3 theme",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-library",
+      "path": "app/src/main/java/com/skb/music/ui/screens/LibraryScreen.kt",
+      "type": "ui",
+      "role": "All songs",
+      "status": "active",
+      "dependencies": [
+        "viewmodel-library"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-favorites",
+      "path": "app/src/main/java/com/skb/music/ui/screens/FavoritesScreen.kt",
+      "type": "ui",
+      "role": "Favorites",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-playlists",
+      "path": "app/src/main/java/com/skb/music/ui/screens/PlaylistsScreen.kt",
+      "type": "ui",
+      "role": "Playlists",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-nowplaying",
+      "path": "app/src/main/java/com/skb/music/ui/screens/NowPlayingScreen.kt",
+      "type": "ui",
+      "role": "Now Playing + gradient",
+      "status": "active",
+      "dependencies": [
+        "viewmodel-player",
+        "palette-util"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-recents",
+      "path": "app/src/main/java/com/skb/music/ui/screens/RecentsScreen.kt",
+      "type": "ui",
+      "role": "Recently played",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-eq",
+      "path": "app/src/main/java/com/skb/music/ui/screens/EqualizerSheet.kt",
+      "type": "ui",
+      "role": "EQ control sheet",
+      "status": "active",
+      "dependencies": [
+        "audio-effects"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-browse",
+      "path": "app/src/main/java/com/skb/music/ui/screens/BrowseScreen.kt",
+      "type": "ui",
+      "role": "Folders/albums/artists",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "screen-stats",
+      "path": "app/src/main/java/com/skb/music/ui/screens/StatsScreen.kt",
+      "type": "ui",
+      "role": "Listening stats",
+      "status": "active",
+      "dependencies": [
+        "repository"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-songrow",
+      "path": "app/src/main/java/com/skb/music/ui/components/SongRow.kt",
+      "type": "ui",
+      "role": "Song list row",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-songmenu",
+      "path": "app/src/main/java/com/skb/music/ui/components/SongMenuSheet.kt",
+      "type": "ui",
+      "role": "Long-press actions",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-songinfo",
+      "path": "app/src/main/java/com/skb/music/ui/components/SongInfoDialog.kt",
+      "type": "ui",
+      "role": "Song info",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-sleeptimer",
+      "path": "app/src/main/java/com/skb/music/ui/components/SleepTimerSheet.kt",
+      "type": "ui",
+      "role": "Sleep timer",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-speed",
+      "path": "app/src/main/java/com/skb/music/ui/components/SpeedSheet.kt",
+      "type": "ui",
+      "role": "Playback speed",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-lyrics",
+      "path": "app/src/main/java/com/skb/music/ui/components/LyricsSheet.kt",
+      "type": "ui",
+      "role": "Lyrics (.lrc + embedded)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-visualizer",
+      "path": "app/src/main/java/com/skb/music/ui/components/SpectrumVisualizer.kt",
+      "type": "ui",
+      "role": "Real-time spectrum",
+      "status": "active",
+      "dependencies": [
+        "audio-effects"
+      ],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "comp-palette",
+      "path": "app/src/main/java/com/skb/music/ui/components/PaletteUtil.kt",
+      "type": "ui",
+      "role": "Album art palette extraction",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "reserved-domain",
+      "path": "app/src/main/java/com/skb/music/domain/",
+      "type": "util",
+      "role": "(empty \u2014 reserved for use cases)",
+      "status": "planned",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "reserved-library",
+      "path": "app/src/main/java/com/skb/music/library/",
+      "type": "util",
+      "role": "(empty \u2014 reserved)",
+      "status": "planned",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "reserved-playlist",
+      "path": "app/src/main/java/com/skb/music/playlist/",
+      "type": "util",
+      "role": "(empty \u2014 reserved)",
+      "status": "planned",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "reserved-lyrics",
+      "path": "app/src/main/java/com/skb/music/lyrics/",
+      "type": "util",
+      "role": "(empty \u2014 reserved)",
+      "status": "planned",
+      "dependencies": [],
+      "_project": "SKB-Music",
+      "_project_id": "skb-music"
+    },
+    {
+      "name": "main",
+      "path": "app/src/main/java/com/skb/player/MainActivity.kt",
+      "type": "core",
+      "role": "Root nav host",
+      "status": "active",
+      "dependencies": [
+        "playback-service"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "playback-service",
+      "path": "app/src/main/java/com/skb/player/PlaybackService.kt",
+      "type": "service",
+      "role": "Foreground service + MediaSession",
+      "status": "active",
+      "dependencies": [
+        "media3"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "splash",
+      "path": "app/src/main/java/com/skb/player/ui/SplashScreen.kt",
+      "type": "ui",
+      "role": "Launch animation",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "home",
+      "path": "app/src/main/java/com/skb/player/ui/HomeScreen.kt",
+      "type": "ui",
+      "role": "Video grid home",
+      "status": "active",
+      "dependencies": [
+        "media-scanner"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "folder",
+      "path": "app/src/main/java/com/skb/player/ui/FolderScreen.kt",
+      "type": "ui",
+      "role": "Folder browser",
+      "status": "active",
+      "dependencies": [
+        "media-scanner"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "history",
+      "path": "app/src/main/java/com/skb/player/ui/HistoryScreen.kt",
+      "type": "ui",
+      "role": "Watch history",
+      "status": "active",
+      "dependencies": [
+        "history-manager"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "search",
+      "path": "app/src/main/java/com/skb/player/ui/SearchScreen.kt",
+      "type": "ui",
+      "role": "Search",
+      "status": "active",
+      "dependencies": [
+        "media-scanner"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "settings",
+      "path": "app/src/main/java/com/skb/player/ui/SettingsScreen.kt",
+      "type": "ui",
+      "role": "Preferences",
+      "status": "active",
+      "dependencies": [
+        "settings-manager"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "player",
+      "path": "app/src/main/java/com/skb/player/ui/VideoPlayerScreen.kt",
+      "type": "ui",
+      "role": "ExoPlayer host + controls",
+      "status": "active",
+      "dependencies": [
+        "playback-service",
+        "bookmark-manager"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "bookmark-dialogs",
+      "path": "app/src/main/java/com/skb/player/ui/BookmarkDialogs.kt",
+      "type": "ui",
+      "role": "Bookmark add/edit",
+      "status": "active",
+      "dependencies": [
+        "bookmark-manager"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "video-dialogs",
+      "path": "app/src/main/java/com/skb/player/ui/VideoDialogs.kt",
+      "type": "ui",
+      "role": "Rename/delete/info",
+      "status": "active",
+      "dependencies": [
+        "file-ops"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "new-dialogs",
+      "path": "app/src/main/java/com/skb/player/ui/NewDialogs.kt",
+      "type": "ui",
+      "role": "Playlists, EQ, etc.",
+      "status": "active",
+      "dependencies": [
+        "playlist-manager",
+        "equalizer-manager"
+      ],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "theme",
+      "path": "app/src/main/java/com/skb/player/ui/Theme.kt",
+      "type": "ui",
+      "role": "Material3 theme",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "media-scanner",
+      "path": "app/src/main/java/com/skb/player/library/MediaScanner.kt",
+      "type": "service",
+      "role": "Local video scan",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "history-manager",
+      "path": "app/src/main/java/com/skb/player/library/HistoryManager.kt",
+      "type": "data",
+      "role": "Watch history",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "bookmark-manager",
+      "path": "app/src/main/java/com/skb/player/library/BookmarkManager.kt",
+      "type": "data",
+      "role": "Per-video bookmarks",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "playlist-manager",
+      "path": "app/src/main/java/com/skb/player/library/PlaylistManager.kt",
+      "type": "data",
+      "role": "User playlists",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "favorites-manager",
+      "path": "app/src/main/java/com/skb/player/library/FavoritesManager.kt",
+      "type": "data",
+      "role": "Favorites + watch later",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "settings-manager",
+      "path": "app/src/main/java/com/skb/player/library/SettingsManager.kt",
+      "type": "data",
+      "role": "SharedPreferences",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "file-ops",
+      "path": "app/src/main/java/com/skb/player/library/FileOps.kt",
+      "type": "service",
+      "role": "Rename/delete/move (Result API)",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "thumbnail-loader",
+      "path": "app/src/main/java/com/skb/player/library/ThumbnailLoader.kt",
+      "type": "service",
+      "role": "Video frame extraction",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    },
+    {
+      "name": "equalizer-manager",
+      "path": "app/src/main/java/com/skb/player/library/EqualizerManager.kt",
+      "type": "service",
+      "role": "Audio EQ presets",
+      "status": "active",
+      "dependencies": [],
+      "_project": "SKB-Player",
+      "_project_id": "skb-player"
+    }
+  ]
+}

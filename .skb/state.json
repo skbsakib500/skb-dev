@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Phase 1 — migrate 5 projects to SKB Schema v1",
-  "next_focus": "Phase 2 — populate modules.json + assets.json for all projects",
-  "progress": 20,
+  "current_focus": "Phase 2 \u2014 ecosystem registries (aggregation)",
+  "next_focus": "Phase 3 \u2014 Context Engine",
+  "progress": 40,
   "build": "ready",
   "tests": "none",
   "git": {
