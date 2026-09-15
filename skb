@@ -1,0 +1,240 @@
+#!/data/data/com.termux/files/usr/bin/bash
+# ═══════════════════════════════════════════════════════════
+#  SKB DEV — Command Center v0.2
+#  Unified development infrastructure for SKB projects
+# ═══════════════════════════════════════════════════════════
+
+SKB_ROOT="${SKB_ROOT:-$HOME}"
+SKB_VERSION="0.2.0"
+
+# ─── Colors ───
+BOLD=$'\033[1m'
+DIM=$'\033[2m'
+CYAN=$'\033[36m'
+GREEN=$'\033[32m'
+YELLOW=$'\033[33m'
+RED=$'\033[31m'
+BLUE=$'\033[34m'
+RESET=$'\033[0m'
+
+# ─── Utils ───
+find_projects() {
+  find "$SKB_ROOT" -maxdepth 2 -name ".skb" -type d 2>/dev/null \
+    | xargs -n1 dirname 2>/dev/null | sort
+}
+
+jget() {
+  # $1 = file, $2 = key (top-level string)
+  grep -o "\"$2\": *\"[^\"]*\"" "$1" 2>/dev/null \
+    | head -1 | cut -d'"' -f4
+}
+
+jget_num() {
+  grep -o "\"$2\": *[0-9]*" "$1" 2>/dev/null \
+    | head -1 | grep -o '[0-9]*$'
+}
+
+status_of() {
+  # $1 = project dir
+  cd "$1" 2>/dev/null || return
+  if [ ! -d .git ]; then
+    cd - >/dev/null
+    echo "no-git"
+    return
+  fi
+  local dirty=$(git status -s 2>/dev/null | wc -l)
+  cd - >/dev/null
+  [ "$dirty" -eq 0 ] && echo "clean" || echo "dirty:$dirty"
+}
+
+# ─── Commands ───
+cmd_dashboard() {
+  local count=$(find_projects | wc -l)
+  local clean=0 dirty=0
+
+  while read p; do
+    [ -z "$p" ] && continue
+    case "$(status_of "$p")" in
+      clean) clean=$((clean+1)) ;;
+      dirty:*) dirty=$((dirty+1)) ;;
+    esac
+  done < <(find_projects)
+
+  clear
+  echo "${BOLD}${CYAN}╔══════════════════════════════════════════════════╗${RESET}"
+  echo "${BOLD}${CYAN}║       SKB DEV ECOSYSTEM  v$SKB_VERSION              ║${RESET}"
+  echo "${BOLD}${CYAN}║       Professional Command Hub                   ║${RESET}"
+  echo "${BOLD}${CYAN}╠══════════════════════════════════════════════════╣${RESET}"
+  printf "${CYAN}║${RESET} Projects registered : ${GREEN}%-21s${RESET}${CYAN}║${RESET}\n" "$count"
+  printf "${CYAN}║${RESET} Clean               : ${GREEN}%-21s${RESET}${CYAN}║${RESET}\n" "$clean"
+  printf "${CYAN}║${RESET} With changes        : ${YELLOW}%-21s${RESET}${CYAN}║${RESET}\n" "$dirty"
+  echo "${BOLD}${CYAN}╠══════════════════════════════════════════════════╣${RESET}"
+  echo "${CYAN}║${RESET} ${BOLD}Commands${RESET}                                         ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb projects          List all projects        ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb status            Current dir details     ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb open <name>       Show project summary    ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb all               All project statuses    ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb log <name>        Recent commits          ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb todo <name>       Open TODO items         ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb issues <name>     Open known issues       ${CYAN}║${RESET}"
+  echo "${CYAN}║${RESET}   skb cd <name>         Print cd command        ${CYAN}║${RESET}"
+  echo "${BOLD}${CYAN}╚══════════════════════════════════════════════════╝${RESET}"
+}
+
+cmd_projects() {
+  echo "${BOLD}${CYAN}📦 Registered SKB Projects${RESET}"
+  echo ""
+  printf "${DIM}  %-20s %-12s %-10s %s${RESET}\n" "NAME" "VERSION" "STATUS" "TYPE"
+  printf "${DIM}  %-20s %-12s %-10s %s${RESET}\n" "────" "───────" "──────" "────"
+  find_projects | while read p; do
+    local name=$(basename "$p")
+    local ver=$(jget "$p/.skb/project.json" "version")
+    local type=$(jget "$p/.skb/project.json" "type")
+    local st=$(status_of "$p")
+    local st_icon
+    case "$st" in
+      clean)      st_icon="${GREEN}✅ clean${RESET}" ;;
+      dirty:*)    st_icon="${YELLOW}⚠️  ${st#dirty:} new${RESET}" ;;
+      *)          st_icon="${DIM}—${RESET}" ;;
+    esac
+    printf "  %-20s %-12s %-22s %s\n" "$name" "${ver:-—}" "$st_icon" "${type:-—}"
+  done
+}
+
+cmd_status() {
+  local p="$(pwd)"
+  if [ ! -d "$p/.skb" ]; then
+    echo "${RED}⚠️  Not an SKB project (no .skb/ folder)${RESET}"
+    return 1
+  fi
+  local name=$(basename "$p")
+  echo "${BOLD}${CYAN}════════════════════════════════════════════════${RESET}"
+  echo "${BOLD}${CYAN}  $name — Project Status${RESET}"
+  echo "${BOLD}${CYAN}════════════════════════════════════════════════${RESET}"
+  echo ""
+  echo "${BOLD}Identity:${RESET}"
+  echo "  ID:      $(jget .skb/project.json project_id)"
+  echo "  Type:    $(jget .skb/project.json type)"
+  echo "  Version: $(jget .skb/project.json version)"
+  echo "  Status:  $(jget .skb/project.json status)"
+  echo ""
+  echo "${BOLD}Repository:${RESET}"
+  echo "  Remote:  $(git remote get-url origin 2>/dev/null | sed 's|gh[pous]_[A-Za-z0-9_]*|<REDACTED>|g')"
+  echo "  Branch:  $(git branch --show-current 2>/dev/null)"
+  echo "  Head:    $(git log --oneline -1 2>/dev/null | cut -c1-60)"
+  echo "  State:   $(status_of "$p")"
+  echo ""
+  echo "${BOLD}Current Focus:${RESET}"
+  echo "  $(jget .skb/state.json current_focus)"
+  echo ""
+  echo "${BOLD}Next:${RESET}"
+  echo "  $(jget .skb/state.json next_focus)"
+  echo ""
+  echo "${BOLD}Open Issues:${RESET}"
+  local issues=$(grep -o '"[^"]*"' .skb/state.json | grep '^"KI-' | tr -d '"' | paste -sd ' ' -)
+  echo "  ${issues:-none}"
+  echo ""
+  echo "${DIM}Docs: $(ls *.md 2>/dev/null | tr '\n' ' ')${RESET}"
+}
+
+cmd_open() {
+  local name="$1"
+  [ -z "$name" ] && { echo "${RED}usage: skb open <project>${RESET}"; return 1; }
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && p=$(find_projects | grep -i "/$name" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+  local name2=$(basename "$p")
+  echo "${BOLD}${CYAN}═══ $name2 ═══${RESET}"
+  [ -f "$p/PROJECT.md" ] && head -40 "$p/PROJECT.md"
+  echo ""
+  echo "${DIM}cd $p${RESET}"
+}
+
+cmd_all() {
+  echo "${BOLD}${CYAN}═══ All Projects ═══${RESET}"
+  echo ""
+  find_projects | while read p; do
+    local name=$(basename "$p")
+    local ver=$(jget "$p/.skb/project.json" "version")
+    local focus=$(jget "$p/.skb/state.json" current_focus)
+    local st=$(status_of "$p")
+    echo "${BOLD}📦 $name${RESET}  v$ver  [$st]"
+    echo "   ${DIM}focus: ${focus:-—}${RESET}"
+    cd "$p"
+    git log --oneline -2 2>/dev/null | sed 's/^/   · /'
+    cd - >/dev/null
+    echo ""
+  done
+}
+
+cmd_log() {
+  local name="$1"
+  [ -z "$name" ] && name="$(basename $(pwd))"
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+  echo "${BOLD}${CYAN}═══ $name — recent commits ═══${RESET}"
+  cd "$p"
+  git log --oneline -10 | sed 's/^/  /'
+  cd - >/dev/null
+}
+
+cmd_todo() {
+  local name="$1"
+  [ -z "$name" ] && name="$(basename $(pwd))"
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+  echo "${BOLD}${CYAN}═══ $name — open TODOs ═══${RESET}"
+  grep "^- \[ \]" "$p/TODO.md" 2>/dev/null | head -20 | sed 's/^/  /'
+}
+
+cmd_issues() {
+  local name="$1"
+  [ -z "$name" ] && name="$(basename $(pwd))"
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+  echo "${BOLD}${CYAN}═══ $name — open issues ═══${RESET}"
+  grep "^## 🟠\|^## 🟡\|^## 🟢\|^## 🔴" "$p/KNOWN-ISSUES.md" 2>/dev/null | sed 's/^/  /'
+}
+
+cmd_cd() {
+  local name="$1"
+  local p
+  p=$(find_projects | grep "/$name$" | head -1)
+  [ -z "$p" ] && { echo "${RED}project not found: $name${RESET}"; return 1; }
+  echo "cd $p"
+}
+
+# ─── Dispatch ───
+case "${1:-}" in
+  "")         cmd_dashboard ;;
+  projects|p) cmd_projects ;;
+  status|s)   cmd_status ;;
+  open|o)     cmd_open "$2" ;;
+  all|a)      cmd_all ;;
+  log|l)      cmd_log "$2" ;;
+  todo|t)     cmd_todo "$2" ;;
+  issues|i)   cmd_issues "$2" ;;
+  cd)         cmd_cd "$2" ;;
+  -v|--version) echo "skb-dev v$SKB_VERSION" ;;
+  -h|--help)
+    echo "SKB Dev — Command Center v$SKB_VERSION"
+    echo ""
+    echo "  skb                     dashboard"
+    echo "  skb projects            all projects (table)"
+    echo "  skb status              current project details"
+    echo "  skb open <name>         show PROJECT.md summary"
+    echo "  skb all                 all projects (detailed)"
+    echo "  skb log <name>          recent commits"
+    echo "  skb todo <name>         open TODOs"
+    echo "  skb issues <name>       open issues"
+    echo "  skb cd <name>           print cd command"
+    ;;
+  *)
+    echo "${RED}Unknown command: $1${RESET}"
+    echo "Try: skb --help"
+    ;;
+esac

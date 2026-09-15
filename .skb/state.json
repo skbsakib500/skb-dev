@@ -1,0 +1,7 @@
+{
+  "as_of": "2026-09-16",
+  "version": "0.2.0",
+  "commands": ["dashboard","projects","status","open","all","log","todo","issues","cd"],
+  "current_focus": "v0.2 — multi-project dashboard",
+  "next_focus": "v0.3 — actions (build, test, release)"
+}

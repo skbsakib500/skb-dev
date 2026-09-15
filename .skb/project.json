@@ -1,0 +1,11 @@
+{
+  "skb_version": "0.1.0",
+  "project_id": "skb-dev",
+  "display_name": "SKB Dev CLI",
+  "type": "cli-tool",
+  "subtype": "bash",
+  "version": "0.2.0",
+  "status": "active",
+  "author": {"name":"SKB Dev","github":"skbsakib500","email":"msakibalmhamud5@gmail.com"},
+  "purpose": "unified command center"
+}
