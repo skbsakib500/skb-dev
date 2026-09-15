@@ -1,5 +1,24 @@
 # Changelog — SKB-Dev
 
+## [1.2.0] — 2026-09-16
+
+### Added
+- **Runtime Prompt Wiring** (Phase 11)
+- Agent-Mimi: `mimi/prompt_loader.py` loads spec prompts
+- Agent-Mimi: `mimi/ai_plan.py` uses spec, hardcoded as fallback
+- Mimi-Android: `scripts/sync-prompts.py` generates `assets/prompts/generated.js`
+- Mimi-Android: `tools/ai_plan.js` has `loadSpecPrompt()` + `fillSpec()` + `buildPromptFromSpec()`
+- Cross-runtime verified: Python + JS read same spec
+
+### Architectural rule locked
+- `spec/lifos/` — Source of Truth (git-tracked)
+- Runtime code — Adapter/Consumer
+- Generated/cached prompt — Never canonical
+
+### Changed
+- version 1.1.0 → 1.2.0
+
+
 ## [1.1.0] — 2026-09-16
 
 ### Added

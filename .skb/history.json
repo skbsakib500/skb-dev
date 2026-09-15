@@ -43,6 +43,19 @@
         "Policies: privacy, safety, identity, boundaries",
         "I/O schema: standard request/response contract"
       ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-09-16",
+      "tag": "v1.2.0",
+      "commit": null,
+      "highlights": [
+        "Runtime prompt wiring (Phase 11)",
+        "Agent-Mimi: prompt_loader.py reads spec",
+        "Mimi-Android: sync-prompts.py + loadSpecPrompt()",
+        "Cross-runtime verified \u2014 same spec, both runtimes",
+        "Architecture: spec = canonical, runtime = adapter"
+      ]
     }
   ],
   "milestones": [
