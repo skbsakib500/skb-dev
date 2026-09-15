@@ -1,8 +1,8 @@
 {
   "schema": "skb/v1",
-  "current_focus": "Phase 7 \u2014 AI Context Export shipped",
-  "next_focus": "Phase 8 \u2014 polish + portfolio",
-  "progress": 95,
+  "current_focus": "Life OS registered (Phase 1 of master plan)",
+  "next_focus": "Data bridge (canonical JSON)",
+  "progress": 98,
   "build": "ready",
   "tests": "none",
   "git": {

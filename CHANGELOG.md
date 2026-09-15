@@ -1,5 +1,22 @@
 # Changelog — SKB-Dev
 
+## [0.9.0] — 2026-09-16
+
+### Added
+- `skb lifos` — Life OS overview
+- `skb lifos features` — cross-project feature matrix
+- `skb lifos context` — AI-ready Life OS context
+- `skb lifos version` — version sync check
+- `~/Life-OS/` workspace (product-group registration)
+- `.skb/lifos.json` — brain + delivery + vault
+- `features.json` — 39 features × brain/android/sync
+- `schema.json` — canonical data contract (10 entities, v3)
+- `VERSION` — Life OS version lock
+- `ai/` — prompts, council, policies, schemas, context (reserved)
+
+### Changed
+- version 0.8.0 → 0.9.0
+
 ## [0.8.0] — 2026-09-16
 
 ### Added

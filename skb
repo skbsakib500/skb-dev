@@ -1016,6 +1016,153 @@ print("\n".join(out))
 PYAIC
 }
 
+# ─── LIFOS MODULE (Life OS Control) ───
+
+_LIFOS_DIR="$HOME/Life-OS"
+
+cmd_lifos() {
+  local action="$1"
+  shift
+
+  if [ ! -d "$_LIFOS_DIR" ]; then
+    echo "${RED}Life-OS not registered at $_LIFOS_DIR${RESET}"
+    return 1
+  fi
+
+  case "$action" in
+    "")           _lifos_overview ;;
+    features|f)   _lifos_features ;;
+    context|c)    _lifos_context ;;
+    version|v)    _lifos_version ;;
+    doctor|d)     _lifos_doctor ;;
+    *)
+      echo "usage: skb lifos [features|context|version|doctor]"
+      ;;
+  esac
+}
+
+_lifos_overview() {
+  cd "$_LIFOS_DIR"
+  python3 - <<'PYLO'
+import json, os
+lifos = json.load(open(".skb/lifos.json"))
+ver = open("VERSION").read().strip()
+feats = json.load(open("features.json"))
+
+all_feats = []
+for group, items in feats["features"].items():
+    for name, f in items.items():
+        all_feats.append((group, name, f))
+
+aligned = sum(1 for _,_,f in all_feats if f["sync"] == "aligned")
+partial = sum(1 for _,_,f in all_feats if f["sync"] == "partial")
+pending = sum(1 for _,_,f in all_feats if f["sync"] == "pending")
+missing = sum(1 for _,_,f in all_feats if f["sync"] == "missing")
+
+print("\033[1;36m═════════════════════════════════════════════════\033[0m")
+print(f"\033[1;36m  {lifos['name']}  v{ver}\033[0m")
+print("\033[1;36m═════════════════════════════════════════════════\033[0m")
+print()
+print(f"  Brain    : {lifos['brain']}")
+print(f"  Delivery : {lifos['delivery']}")
+print(f"  Vault    : {lifos['vault']}")
+print(f"  Status   : {lifos['status']}")
+print()
+print(f"  Features : {len(all_feats)} total")
+print(f"    \033[32m✅ aligned : {aligned}\033[0m")
+print(f"    \033[33m🟡 partial : {partial}\033[0m")
+print(f"    \033[33m🟠 pending : {pending}\033[0m")
+print(f"    \033[31m🔴 missing : {missing}\033[0m")
+print()
+print("\033[1;36m─────────────────────────────────────────────────\033[0m")
+print("  Usage: skb lifos features | context | version | doctor")
+print("\033[1;36m─────────────────────────────────────────────────\033[0m")
+PYLO
+}
+
+_lifos_features() {
+  cd "$_LIFOS_DIR"
+  python3 - <<'PYLO'
+import json
+d = json.load(open("features.json"))
+ICON = {"implemented":"✅","partial":"🟡","planned":"🟠","missing":"🔴","aligned":"✅","pending":"🟡"}
+print(f"{'FEATURE':<18} {'GROUP':<15} {'BRAIN':<6} {'ANDROID':<8} {'SYNC':<6}")
+print("─" * 60)
+for group, items in d["features"].items():
+    for name, f in sorted(items.items()):
+        b = ICON.get(f["brain"], "?")
+        a = ICON.get(f["android"], "?")
+        s = ICON.get(f["sync"], "?")
+        print(f"{name:<18} {group:<15} {b:<6} {a:<8} {s:<6}")
+PYLO
+}
+
+_lifos_context() {
+  cd "$_LIFOS_DIR"
+  python3 - <<'PYLO'
+import json
+lifos = json.load(open(".skb/lifos.json"))
+ver = open("VERSION").read().strip()
+feats = json.load(open("features.json"))
+sch = json.load(open("schema.json"))
+
+all_f = []
+for g, items in feats["features"].items():
+    for n, f in items.items(): all_f.append((g,n,f))
+aligned = [n for _,n,f in all_f if f["sync"]=="aligned"]
+missing = [n for _,n,f in all_f if f["sync"]=="missing"]
+partial = [n for _,n,f in all_f if f["sync"]=="partial"]
+
+print(f"=== MIMI LIFE OS CONTEXT ===")
+print(f"Version: {ver}")
+print(f"Brain: {lifos['brain']}")
+print(f"Delivery: {lifos['delivery']}")
+print()
+print(f"FEATURES")
+print(f"  Total: {len(all_f)}")
+print(f"  Aligned: {len(aligned)} ({', '.join(aligned[:5])}{'...' if len(aligned)>5 else ''})")
+print(f"  Partial: {len(partial)} ({', '.join(partial[:5])}{'...' if len(partial)>5 else ''})")
+print(f"  Missing: {len(missing)} ({', '.join(missing[:5])}{'...' if len(missing)>5 else ''})")
+print()
+print(f"SCHEMA v{sch['version']} — {len(sch['entities'])} entities")
+for e in sch["entities"]:
+    print(f"  · {e}")
+print()
+print("=== END CONTEXT ===")
+PYLO
+}
+
+_lifos_version() {
+  cd "$_LIFOS_DIR"
+  local lifos_ver=$(cat VERSION)
+  echo "Life OS: v$lifos_ver"
+  echo ""
+  for proj in Agent-Mimi Mimi-Android; do
+    if [ -f "$HOME/$proj/.skb/project.json" ]; then
+      local v=$(python3 -c "import json; print(json.load(open('$HOME/$proj/.skb/project.json')).get('version','?'))")
+      echo "  $proj: v$v"
+    fi
+  done
+}
+
+_lifos_doctor() {
+  cd "$_LIFOS_DIR"
+  echo "\033[1;36m─── LIFE OS DOCTOR ───\033[0m"
+  echo ""
+  [ -f .skb/lifos.json ] && echo "  ✅ .skb/lifos.json" || echo "  🔴 missing lifos.json"
+  [ -f features.json ]   && echo "  ✅ features.json"   || echo "  🔴 missing features.json"
+  [ -f schema.json ]     && echo "  ✅ schema.json"     || echo "  🔴 missing schema.json"
+  [ -f VERSION ]         && echo "  ✅ VERSION"         || echo "  🔴 missing VERSION"
+  echo ""
+  for proj in Agent-Mimi Mimi-Android; do
+    if [ -d "$HOME/$proj/.skb" ]; then
+      echo "  ✅ $proj registered"
+    else
+      echo "  🔴 $proj not registered"
+    fi
+  done
+}
+
 # ─── Dispatch ───
 case "${1:-}" in
   "")         cmd_dashboard ;;
@@ -1034,6 +1181,7 @@ case "${1:-}" in
   doctor)   _skb_doctor ;;
   release|r) cmd_release "$2" "$3" ;;
   ai-context|ai|aictx) cmd_ai_context "$2" "$3" ;;
+  lifos)     cmd_lifos "$2" ;;
   context|c)  cmd_context "$2" "$3" ;;
   -v|--version) echo "skb-dev v$SKB_VERSION" ;;
   -h|--help)
