@@ -1,0 +1,97 @@
+{
+  "schema": "skb/action/v1",
+  "description": "Canonical SKB action and event shapes",
+  "action": {
+    "type": "object",
+    "required": [
+      "id",
+      "verb",
+      "entity",
+      "ts"
+    ],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^act_[0-9]+_[a-z0-9]+$"
+      },
+      "verb": {
+        "enum": [
+          "create",
+          "update",
+          "delete",
+          "read",
+          "list",
+          "search",
+          "open",
+          "close",
+          "export",
+          "import",
+          "share",
+          "undo"
+        ]
+      },
+      "entity": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "payload": {
+        "type": "object"
+      },
+      "ts": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "enum": [
+              "user",
+              "undo",
+              "redo",
+              "sync",
+              "system"
+            ]
+          },
+          "parentId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "session": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "event": {
+    "type": "object",
+    "required": [
+      "event",
+      "action",
+      "ts"
+    ],
+    "properties": {
+      "event": {
+        "enum": [
+          "ACTION_REQUEST",
+          "ACTION_SUCCESS",
+          "ACTION_FAIL"
+        ]
+      },
+      "action": {
+        "$ref": "#/action"
+      },
+      "result": {},
+      "error": {
+        "type": "string"
+      },
+      "ts": {
+        "type": "string",
+        "format": "date-time"
+      }
+    }
+  }
+}

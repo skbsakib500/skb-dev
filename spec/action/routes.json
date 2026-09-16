@@ -1,0 +1,25 @@
+{
+  "schema": "skb/action-routes/v1",
+  "description": "Per-app action registry. Copy, fill entities + handlers.",
+  "entities": [],
+  "handlers": [],
+  "example": {
+    "entities": [
+      "task",
+      "goal",
+      "note"
+    ],
+    "handlers": [
+      {
+        "name": "create.note",
+        "verb": "create",
+        "entity": "note"
+      },
+      {
+        "name": "delete.note",
+        "verb": "delete",
+        "entity": "note"
+      }
+    ]
+  }
+}
